@@ -1,40 +1,20 @@
-import { speciesBySlug } from "@/data/species";
 import { IdentificationResult } from "@/lib/types";
 
-export async function identifyPlant(_file: File): Promise<IdentificationResult> {
-  // Placeholder: replace with Pl@ntNet (or similar) request in future implementation.
-  const primary = speciesBySlug["texas-sage"];
-  const altOne = speciesBySlug["live-oak"];
-  const altTwo = speciesBySlug["chinaberry"];
+export async function identifyPlant(file: File): Promise<IdentificationResult> {
+  const body = new FormData();
+  body.append("image", file, file.name);
+  body.append("mode", "plant");
 
-  return {
-    type: "plant",
-    primary: {
-      commonName: primary.commonName,
-      scientificName: primary.scientificName,
-      confidence: 0.93,
-      summary: primary.summary,
-      nativeStatus: primary.nativeStatus,
-      slug: primary.slug,
-    },
-    alternatives: [
-      {
-        commonName: altOne.commonName,
-        scientificName: altOne.scientificName,
-        confidence: 0.81,
-        summary: altOne.summary,
-        nativeStatus: altOne.nativeStatus,
-        slug: altOne.slug,
-      },
-      {
-        commonName: altTwo.commonName,
-        scientificName: altTwo.scientificName,
-        confidence: 0.58,
-        summary: altTwo.summary,
-        nativeStatus: altTwo.nativeStatus,
-        slug: altTwo.slug,
-      },
-    ],
-    analyzedAt: new Date().toISOString(),
-  };
+  const response = await fetch("/api/identify/photo", {
+    method: "POST",
+    body,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.error || "Unable to identify uploaded plant image.");
+  }
+
+  return data.result as IdentificationResult;
 }

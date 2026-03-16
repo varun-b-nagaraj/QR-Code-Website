@@ -6,7 +6,7 @@ export type SpeciesCategory =
   | "Insects"
   | "Trees";
 
-export type NativeStatus = "Native" | "Invasive";
+export type NativeStatus = "Native" | "Invasive" | "Unknown";
 
 export interface Species {
   slug: string;
@@ -57,4 +57,6 @@ export interface IdentificationResult {
   primary: IdentificationCandidate;
   alternatives: IdentificationCandidate[];
   analyzedAt: string;
+  source?: "inaturalist" | "plantnet" | "mock";
+  providerNote?: string;
 }

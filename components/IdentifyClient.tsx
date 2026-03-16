@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { identifyAnimal } from "@/lib/identifyAnimal";
+import { askAssistant } from "@/lib/aiClient";
 import { identifyPlant } from "@/lib/identifyPlant";
 import { IdentificationResult } from "@/lib/types";
 
@@ -12,6 +13,10 @@ export function IdentifyClient() {
   const [mode, setMode] = useState<"plant" | "animal">("plant");
   const [result, setResult] = useState<IdentificationResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
 
   const instruction = useMemo(
     () =>
@@ -24,9 +29,28 @@ export function IdentifyClient() {
   async function onIdentify() {
     if (!file) return;
     setLoading(true);
+    setAiError(null);
+    setAiAnswer(null);
     const response = mode === "plant" ? await identifyPlant(file) : await identifyAnimal(file);
     setResult(response);
     setLoading(false);
+  }
+
+  async function onAskAI() {
+    if (!result || !aiPrompt.trim()) return;
+
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const context = `Primary species: ${result.primary.commonName} (${result.primary.scientificName}), status: ${result.primary.nativeStatus}, summary: ${result.primary.summary}`;
+      const answer = await askAssistant({ prompt: aiPrompt.trim(), context });
+      setAiAnswer(answer);
+    } catch (error) {
+      setAiError(error instanceof Error ? error.message : "AI request failed.");
+      setAiAnswer(null);
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   return (
@@ -57,6 +81,9 @@ export function IdentifyClient() {
         </div>
 
         <p className="text-sm text-county-text-secondary">{instruction}</p>
+        <p className="text-xs text-county-text-secondary">
+          Plant identification can use a PlantNet-style service; animal identification should use a wildlife model or provider.
+        </p>
 
         <label
           htmlFor="species-upload"
@@ -129,6 +156,27 @@ export function IdentifyClient() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div className="space-y-3 rounded-lg bg-white p-4 shadow-sm">
+            <h3 className="text-lg font-semibold text-county-text">Ask AI About This Species</h3>
+            <textarea
+              rows={3}
+              value={aiPrompt}
+              onChange={(event) => setAiPrompt(event.target.value)}
+              placeholder="Example: Is this species dangerous for kids or pets, and what should we observe safely?"
+              className="w-full rounded-lg border border-county-panel px-3 py-2 outline-none focus:border-county-green"
+            />
+            <button
+              type="button"
+              onClick={onAskAI}
+              disabled={aiLoading || !aiPrompt.trim()}
+              className="rounded-full bg-county-blue px-5 py-2 text-sm font-semibold text-white hover:bg-county-green disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {aiLoading ? "Asking AI..." : "Ask AI"}
+            </button>
+            {aiError && <p className="text-sm text-red-700">{aiError}</p>}
+            {aiAnswer && <p className="text-sm text-county-text">{aiAnswer}</p>}
           </div>
         </section>
       )}
