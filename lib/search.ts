@@ -13,7 +13,7 @@ const staticPages: SearchResult[] = [
   {
     title: "Identify Species",
     description: "Upload a photo and get a mocked species result.",
-    href: "/identify",
+    href: "/ai",
     type: "Page",
   },
   {
@@ -23,15 +23,15 @@ const staticPages: SearchResult[] = [
     type: "Page",
   },
   {
-    title: "About This Project",
-    description: "Read the concept overview and county presentation notes.",
-    href: "/about",
+    title: "Park History",
+    description: "Read the timeline and background of local parks and trail development.",
+    href: "/park-history",
     type: "Page",
   },
   {
-    title: "AI Assistant",
-    description: "Concept AI area for future visitor Q&A and guidance.",
-    href: "/ai",
+    title: "About This Project",
+    description: "Read the concept overview and county presentation notes.",
+    href: "/about",
     type: "Page",
   },
 ];

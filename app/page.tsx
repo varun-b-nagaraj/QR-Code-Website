@@ -7,7 +7,7 @@ const cardItems = [
     title: "Identify Plants and Wildlife",
     description: "Upload a photo to identify plants and wildlife around the park.",
     image: "/images/identify-card.svg",
-    href: "/identify",
+    href: "/ai",
   },
   {
     title: "Trail Map",
@@ -28,15 +28,15 @@ const cardItems = [
     href: "/about",
   },
   {
-    title: "Educational Stops",
-    description: "Preview what visitors see after scanning trail signage QR codes.",
-    image: "/images/stop-card.svg",
-    href: "/sign/native-plants-stop",
+    title: "Park History",
+    description: "Learn how these parks, trails, and conservation efforts developed over time.",
+    image: "/images/history-card.svg",
+    href: "/park-history",
   },
   {
-    title: "Park History",
-    description: "Understand how the county trail system supports community learning.",
-    image: "/images/history-card.svg",
+    title: "About",
+    description: "Understand this project concept, educational goals, and technology approach.",
+    image: "/images/conservation-card.svg",
     href: "/about",
   },
 ];
@@ -56,7 +56,6 @@ export default function Home() {
             <section>
               <p className="text-sm text-county-text-secondary">Home › Departments › Parks</p>
               <h1 className="mt-2 text-4xl font-semibold text-county-green">Educational Trail Experience</h1>
-              <h2 className="mt-3 text-3xl font-semibold text-county-dark-green">Explore and Learn</h2>
               <div className="mt-5">
                 <CardGrid items={cardItems} />
               </div>

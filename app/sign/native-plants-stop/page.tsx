@@ -33,7 +33,7 @@ export default function NativePlantsStopPage() {
         </section>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/identify" className="rounded-full bg-county-green px-5 py-2 font-semibold text-white">
+          <Link href="/ai" className="rounded-full bg-county-green px-5 py-2 font-semibold text-white">
             Identify From Photo
           </Link>
           <Link href="/species" className="rounded-full bg-county-blue px-5 py-2 font-semibold text-white">

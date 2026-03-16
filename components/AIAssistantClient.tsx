@@ -2,11 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ClientChatMessage, streamAssistant } from "@/lib/aiClient";
-import { identifyAnimal } from "@/lib/identifyAnimal";
-import { identifyPlant } from "@/lib/identifyPlant";
+import { identifyBestFromPhoto } from "@/lib/identifyBest";
 import { IdentificationResult } from "@/lib/types";
 
-type IdentifyMode = "animal" | "plant";
+type CameraState = "closed" | "open";
 
 const quickPrompts = [
   "Give me a quick field guide for this species.",
@@ -44,91 +43,126 @@ function cleanAssistantText(value: string): string {
     .replace(/^[-*]\s+/gm, "• ");
 }
 
+function findDroppedImage(files: FileList): File | null {
+  for (const entry of Array.from(files)) {
+    if (entry.type.startsWith("image/")) {
+      return entry;
+    }
+  }
+  return null;
+}
+
 export function AIAssistantClient() {
   const [messages, setMessages] = useState<ClientChatMessage[]>([
     {
       role: "assistant",
-      content:
-        "Upload a photo of an animal or plant, then ask questions. I will use that identification context while answering.",
+      content: "Tap + to add a photo. I will run plant + wildlife detection and use the highest-confidence result for chat context.",
     },
   ]);
   const [input, setInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
 
-  const [mode, setMode] = useState<IdentifyMode>("animal");
-  const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [identifyLoading, setIdentifyLoading] = useState(false);
   const [identifyError, setIdentifyError] = useState<string | null>(null);
   const [identified, setIdentified] = useState<IdentificationResult | null>(null);
-  const [dragActive, setDragActive] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [isPinnedToBottom, setIsPinnedToBottom] = useState(true);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const [cameraState, setCameraState] = useState<CameraState>("closed");
+  const [cameraError, setCameraError] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, chatLoading]);
+    const container = chatScrollRef.current;
+    if (!container || !isPinnedToBottom) return;
+    container.scrollTop = container.scrollHeight;
+  }, [messages, chatLoading, isPinnedToBottom]);
 
   useEffect(() => {
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
+      if (cameraStreamRef.current) {
+        cameraStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
     };
   }, [previewUrl]);
 
-  function selectFile(selected: File | null) {
-    setFile(selected);
-    setIdentified(null);
-    setIdentifyError(null);
+  useEffect(() => {
+    const onDragOver = (event: DragEvent) => {
+      event.preventDefault();
+      setDragActive(true);
+    };
 
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-
-    if (selected) {
-      setPreviewUrl(URL.createObjectURL(selected));
-      return;
-    }
-
-    setPreviewUrl(null);
-  }
-
-  function findDroppedImage(files: FileList): File | null {
-    for (const entry of Array.from(files)) {
-      if (entry.type.startsWith("image/")) {
-        return entry;
+    const onDrop = (event: DragEvent) => {
+      event.preventDefault();
+      setDragActive(false);
+      const files = event.dataTransfer?.files;
+      if (!files?.length) return;
+      const dropped = findDroppedImage(files);
+      if (dropped) {
+        void processSelectedFile(dropped);
       }
-    }
-    return null;
-  }
+    };
+
+    const onDragEnd = () => setDragActive(false);
+
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("drop", onDrop);
+    window.addEventListener("dragleave", onDragEnd);
+
+    return () => {
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("drop", onDrop);
+      window.removeEventListener("dragleave", onDragEnd);
+    };
+    // Intentionally register global drag/drop listeners once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const speciesContext = useMemo(() => buildSpeciesContext(identified), [identified]);
 
-  async function handleIdentify() {
-    if (!file) return;
+  function handleChatScroll() {
+    const container = chatScrollRef.current;
+    if (!container) return;
+    const threshold = 24;
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setIsPinnedToBottom(distanceFromBottom <= threshold);
+  }
 
+  async function processSelectedFile(selected: File) {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(URL.createObjectURL(selected));
+    await handleIdentify(selected);
+  }
+
+  async function handleIdentify(file: File) {
     setIdentifyLoading(true);
     setIdentifyError(null);
 
     try {
-      const result = mode === "plant" ? await identifyPlant(file) : await identifyAnimal(file);
+      const result = await identifyBestFromPhoto(file);
       setIdentified(result);
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: `AI detected ${result.detection?.normalizedLabel || result.primary.commonName} at ${(result.primary.confidence * 100).toFixed(0)}% confidence, then enriched species references with public biodiversity data. Ask anything about this species.`,
+          content: `Photo analyzed as ${result.primary.commonName} (${result.primary.scientificName}) at ${(result.primary.confidence * 100).toFixed(0)}% confidence from best-of animal and plant detection.`,
         },
       ]);
 
-      const autoPrompt =
-        mode === "plant"
-          ? `Tell me about this plant: ${result.primary.commonName}. Include key traits, habitat, and safe observation tips.`
-          : `Tell me about this animal: ${result.primary.commonName}. Include behavior, habitat, and safe observation tips.`;
-
+      const autoPrompt = `Give me a concise field guide for ${result.primary.commonName}. Include habitat, behavior, and safe observation tips.`;
       await handleSend(undefined, autoPrompt, buildSpeciesContext(result));
     } catch (error) {
       setIdentifyError(error instanceof Error ? error.message : "Unable to identify image.");
@@ -186,188 +220,235 @@ export function AIAssistantClient() {
     }
   }
 
+  async function openCamera() {
+    setActionsOpen(false);
+    setCameraError(null);
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError("Camera access is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+        },
+      });
+
+      cameraStreamRef.current = stream;
+      setCameraState("open");
+
+      requestAnimationFrame(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          void videoRef.current.play();
+        }
+      });
+    } catch {
+      setCameraError("Unable to access camera. Check browser camera permissions.");
+    }
+  }
+
+  function closeCamera() {
+    if (cameraStreamRef.current) {
+      cameraStreamRef.current.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
+    }
+    setCameraState("closed");
+  }
+
+  async function handleCameraScan() {
+    const video = videoRef.current;
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+      setCameraError("Camera is not ready yet.");
+      return;
+    }
+
+    const scanWidth = Math.floor(video.videoWidth * 0.74);
+    const scanHeight = Math.floor(video.videoHeight * 0.56);
+    const sx = Math.floor((video.videoWidth - scanWidth) / 2);
+    const sy = Math.floor((video.videoHeight - scanHeight) / 2);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = scanWidth;
+    canvas.height = scanHeight;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      setCameraError("Unable to process camera frame.");
+      return;
+    }
+
+    ctx.drawImage(video, sx, sy, scanWidth, scanHeight, 0, 0, scanWidth, scanHeight);
+
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+    if (!blob) {
+      setCameraError("Unable to create scan image.");
+      return;
+    }
+
+    const photo = new File([blob], `camera-scan-${Date.now()}.jpg`, { type: "image/jpeg" });
+    closeCamera();
+    await processSelectedFile(photo);
+  }
+
   return (
-    <section
-      className="relative flex h-[calc(100vh-70px)] w-full bg-county-white"
-      onDragEnter={(event) => {
-        event.preventDefault();
-        setDragActive(true);
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
-        setDragActive(true);
-      }}
-      onDragLeave={(event) => {
-        event.preventDefault();
-        const nextTarget = event.relatedTarget as Node | null;
-        if (!nextTarget || !event.currentTarget.contains(nextTarget)) {
-          setDragActive(false);
-        }
-      }}
-      onDrop={(event) => {
-        event.preventDefault();
-        setDragActive(false);
-        const dropped = findDroppedImage(event.dataTransfer.files);
-        if (dropped) {
-          selectFile(dropped);
-        }
-      }}
-    >
+    <section className="relative flex h-[calc(100vh-64px)] w-full bg-county-white">
       {dragActive && (
         <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-county-green/15">
           <div className="rounded-xl border border-county-green bg-white px-5 py-3 text-sm font-semibold text-county-green">
-            Drop image to upload
+            Drop image anywhere to analyze
           </div>
         </div>
       )}
 
-      <aside className="hidden h-full w-[340px] shrink-0 border-r border-county-panel bg-county-bg p-4 lg:sticky lg:top-0 lg:block">
-        <div className="rounded-xl border border-county-panel bg-white p-4">
-          <p className="text-sm font-semibold text-county-text">Photo Identification</p>
-          <div className="mt-3 inline-flex rounded-full bg-county-panel p-1 text-sm">
-            <button
-              type="button"
-              onClick={() => setMode("animal")}
-              className={`rounded-full px-3 py-1 ${mode === "animal" ? "bg-white font-semibold text-county-green" : "text-county-text"}`}
-            >
-              Animal
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("plant")}
-              className={`rounded-full px-3 py-1 ${mode === "plant" ? "bg-white font-semibold text-county-green" : "text-county-text"}`}
-            >
-              Plant
-            </button>
-          </div>
-
-          <label
-            htmlFor="chat-identify-upload"
-            className="mt-4 block cursor-pointer rounded-lg border border-dashed border-county-green bg-county-bg px-4 py-8 text-center text-sm text-county-text"
-          >
-            Tap or drop photo anywhere
-            <input
-              id="chat-identify-upload"
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-              onChange={(event) => {
-                const selected = event.target.files?.[0] ?? null;
-                selectFile(selected);
-              }}
-            />
-          </label>
-
-          {previewUrl && <img src={previewUrl} alt="Species upload preview" className="mt-3 h-40 w-full rounded-lg object-cover" />}
-
-          <button
-            type="button"
-            disabled={!file || identifyLoading}
-            onClick={handleIdentify}
-            className="mt-3 w-full rounded-full bg-county-green px-4 py-2 text-sm font-semibold text-white hover:bg-county-dark-green disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {identifyLoading ? "Identifying..." : "Identify from Photo"}
-          </button>
-
-          {identifyError && <p className="mt-2 text-xs text-red-700">{identifyError}</p>}
-
-          {identified && (
-            <div className="mt-3 rounded-lg border border-county-panel bg-county-bg p-3 text-sm text-county-text">
-              <p className="font-semibold text-county-green">{identified.detection?.normalizedLabel || identified.primary.commonName}</p>
-              <p className="italic text-county-text-secondary">{identified.primary.scientificName}</p>
-              <p className="mt-1">AI Confidence: {(identified.primary.confidence * 100).toFixed(0)}%</p>
-              <p className="mt-1 text-xs text-county-text-secondary">Enriched using public biodiversity data.</p>
-              {identified.providerNote && <p className="mt-1 text-xs text-county-text-secondary">{identified.providerNote}</p>}
+      {cameraState === "open" && (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/75 p-4">
+          <div className="w-full max-w-md rounded-xl bg-black p-3">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+              <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[56%] w-[74%] -translate-x-1/2 -translate-y-1/2 border-2 border-county-green shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
             </div>
-          )}
-        </div>
-      </aside>
-
-      <div className="flex min-h-0 flex-1 flex-col">
-        <header className="border-b border-county-panel px-4 py-3 sm:px-6">
-          <h1 className="text-2xl font-semibold text-county-green">Trail Chatbot</h1>
-          <p className="text-sm text-county-text-secondary">
-            Full-screen chat with live Ollama streaming and optional photo identification context.
-          </p>
-        </header>
-
-        <div className="border-b border-county-panel bg-county-bg p-3 lg:hidden">
-          <label
-            htmlFor="chat-identify-upload-mobile"
-            className="block cursor-pointer rounded-lg border border-dashed border-county-green bg-white px-4 py-3 text-center text-xs text-county-text"
-          >
-            Upload / drop image to identify species
-            <input
-              id="chat-identify-upload-mobile"
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-              onChange={(event) => {
-                const selected = event.target.files?.[0] ?? null;
-                selectFile(selected);
-              }}
-            />
-          </label>
-        </div>
-
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex-1 space-y-4 overflow-y-auto bg-white p-4 sm:p-6">
-            {messages.map((message, index) => (
-              <div
-                key={`${message.role}-${index}`}
-                className={`max-w-3xl rounded-2xl px-4 py-3 text-sm sm:text-base ${
-                  message.role === "user"
-                    ? "ml-auto bg-county-green text-white"
-                    : "mr-auto border border-county-panel bg-county-bg text-county-text"
-                }`}
-              >
-                <span className="whitespace-pre-wrap">
-                  {(message.role === "assistant" ? cleanAssistantText(message.content) : message.content) ||
-                    (chatLoading && index === messages.length - 1 ? "Thinking..." : "")}
-                </span>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <form onSubmit={(event) => void handleSend(event)} className="border-t border-county-panel bg-county-bg p-4 sm:p-6">
-            <div className="mb-3 flex flex-wrap gap-2">
-              {quickPrompts.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    setInput(item);
-                    void handleSend(undefined, item);
-                  }}
-                  className="rounded-full border border-county-panel bg-white px-3 py-1 text-xs text-county-text hover:border-county-green"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                placeholder="Ask about the species from your photo..."
-                className="flex-1 rounded-full border border-county-panel bg-white px-4 py-3 text-sm outline-none focus:border-county-green"
-              />
+            <div className="mt-3 flex gap-2">
               <button
-                type="submit"
-                disabled={chatLoading || !input.trim()}
-                className="rounded-full bg-county-blue px-5 py-3 text-sm font-semibold text-white hover:bg-county-green disabled:cursor-not-allowed disabled:opacity-50"
+                type="button"
+                onClick={closeCamera}
+                className="flex-1 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white"
               >
-                {chatLoading ? "Streaming..." : "Send"}
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleCameraScan()}
+                className="flex-1 rounded-full bg-county-green px-4 py-2 text-sm font-semibold text-white"
+              >
+                Scan
               </button>
             </div>
-
-            {chatError && <p className="mt-2 text-sm text-red-700">{chatError}</p>}
-          </form>
+          </div>
         </div>
+      )}
+
+      <div className="flex min-h-0 flex-1 flex-col">
+        <header className="relative border-b border-county-panel px-4 py-3 sm:px-6">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-semibold text-county-green">Trail Chatbot</h1>
+              <p className="text-sm text-county-text-secondary">Tap + to add a photo, then chat with the detected species context.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActionsOpen((prev) => !prev)}
+              className="rounded-full bg-county-green px-3 py-1 text-xl leading-none text-white"
+              aria-label="Add photo"
+            >
+              +
+            </button>
+          </div>
+
+          {actionsOpen && (
+            <div className="absolute right-4 top-16 z-20 w-56 rounded-xl border border-county-panel bg-white p-2 shadow-md sm:right-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setActionsOpen(false);
+                  fileInputRef.current?.click();
+                }}
+                className="w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+              >
+                Add image from device
+              </button>
+              <button
+                type="button"
+                onClick={() => void openCamera()}
+                className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+              >
+                Open camera and scan
+              </button>
+            </div>
+          )}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(event) => {
+              const selected = event.target.files?.[0] ?? null;
+              if (selected) {
+                void processSelectedFile(selected);
+              }
+              event.currentTarget.value = "";
+            }}
+          />
+        </header>
+
+        {(previewUrl || identified || identifyLoading || identifyError || cameraError) && (
+          <div className="border-b border-county-panel bg-county-bg px-4 py-3 sm:px-6">
+            {previewUrl && <img src={previewUrl} alt="Species upload preview" className="h-24 w-24 rounded-lg object-cover" />}
+            {identifyLoading && <p className="mt-2 text-sm text-county-text">Analyzing photo with plant + animal models...</p>}
+            {identified && (
+              <p className="mt-2 text-sm text-county-text">
+                Best match: <span className="font-semibold text-county-green">{identified.primary.commonName}</span> ({(identified.primary.confidence * 100).toFixed(0)}%)
+              </p>
+            )}
+            {identifyError && <p className="mt-2 text-sm text-red-700">{identifyError}</p>}
+            {cameraError && <p className="mt-2 text-sm text-red-700">{cameraError}</p>}
+          </div>
+        )}
+
+        <div ref={chatScrollRef} onScroll={handleChatScroll} className="flex-1 space-y-4 overflow-y-auto bg-white p-4 sm:p-6">
+          {messages.map((message, index) => (
+            <div
+              key={`${message.role}-${index}`}
+              className={`max-w-3xl rounded-2xl px-4 py-3 text-sm sm:text-base ${
+                message.role === "user" ? "ml-auto bg-county-green text-white" : "mr-auto border border-county-panel bg-county-bg text-county-text"
+              }`}
+            >
+              <span className="whitespace-pre-wrap">
+                {(message.role === "assistant" ? cleanAssistantText(message.content) : message.content) ||
+                  (chatLoading && index === messages.length - 1 ? "Thinking..." : "")}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <form onSubmit={(event) => void handleSend(event)} className="border-t border-county-panel bg-county-bg p-4 sm:p-6">
+          <div className="mb-3 flex flex-wrap gap-2">
+            {quickPrompts.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => {
+                  setInput(item);
+                  void handleSend(undefined, item);
+                }}
+                className="rounded-full border border-county-panel bg-white px-3 py-1 text-xs text-county-text hover:border-county-green"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              placeholder="Ask about the species from your photo..."
+              className="flex-1 rounded-full border border-county-panel bg-white px-4 py-3 text-sm outline-none focus:border-county-green"
+            />
+            <button
+              type="submit"
+              disabled={chatLoading || !input.trim()}
+              className="rounded-full bg-county-blue px-5 py-3 text-sm font-semibold text-white hover:bg-county-green disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {chatLoading ? "Streaming..." : "Send"}
+            </button>
+          </div>
+
+          {chatError && <p className="mt-2 text-sm text-red-700">{chatError}</p>}
+        </form>
       </div>
     </section>
   );

@@ -9,13 +9,13 @@ const primaryNavItems = [
   { label: "Trail Map", href: "/trails/champion-park-trail" },
   { label: "Native Plants", href: "/species?category=Plants" },
   { label: "Wildlife", href: "/species?category=Birds" },
-  { label: "Educational Stops", href: "/sign/native-plants-stop" },
+  { label: "Park History", href: "/park-history" },
 ];
 
 const moreInfoItems = [
   { label: "Nature Library", href: "/species" },
   { label: "About", href: "/about" },
-  { label: "Identify", href: "/identify" },
+  { label: "Identify", href: "/ai" },
 ];
 
 export function Header() {
@@ -24,7 +24,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-black/5 bg-county-white/95 shadow-sm backdrop-blur">
-      <div className="mx-auto flex h-[70px] w-full max-w-7xl items-center gap-4 px-3 sm:px-5 lg:px-6">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-3 sm:px-5 lg:px-6">
         <Link href="/" className="mr-2 flex shrink-0 items-center gap-2" aria-label="County Parks Home">
           <div className="flex h-9 w-9 items-center justify-center rounded bg-county-blue text-sm font-semibold text-white">
             W
@@ -95,14 +95,25 @@ export function Header() {
           </Link>
         </div>
 
-        <button
-          type="button"
-          className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-full border border-county-panel text-county-blue lg:hidden"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((value) => !value)}
-        >
-          ☰
-        </button>
+        <div className="ml-auto flex items-center gap-2 lg:hidden">
+          <Link
+            href="/ai"
+            className="ai-scan-ambient relative inline-flex h-10 min-w-[112px] items-center justify-center rounded-full border-2 border-county-green bg-white px-4 text-sm font-semibold text-county-green"
+            aria-label="Open AI Scan"
+          >
+            AI Scan
+          </Link>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-county-panel text-county-blue"
+            aria-label="Toggle menu"
+            onClick={() => setOpen((value) => !value)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden className="h-5 w-5">
+              <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {open && (
