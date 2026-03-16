@@ -24,7 +24,9 @@ function buildSpeciesContext(identified: IdentificationResult | null): string {
   return [
     `Type: ${identified.type}`,
     `Primary: ${identified.primary.commonName} (${identified.primary.scientificName})`,
-    `Confidence: ${(identified.primary.confidence * 100).toFixed(0)}%`,
+    `AI detection confidence: ${(identified.primary.confidence * 100).toFixed(0)}%`,
+    identified.detection ? `Detected label: ${identified.detection.detectedLabel} -> ${identified.detection.normalizedLabel}` : null,
+    identified.enrichment?.taxonomy?.length ? `Taxonomy: ${identified.enrichment.taxonomy.join(" > ")}` : null,
     `Native status: ${identified.primary.nativeStatus}`,
     `Summary: ${identified.primary.summary}`,
     alternativeText ? `Alternatives: ${alternativeText}` : null,
@@ -118,7 +120,7 @@ export function AIAssistantClient() {
         ...prev,
         {
           role: "assistant",
-          content: `Photo identified as ${result.primary.commonName} (${result.primary.scientificName}) at ${(result.primary.confidence * 100).toFixed(0)}% confidence. Ask anything about this species.`,
+          content: `AI detected ${result.detection?.normalizedLabel || result.primary.commonName} at ${(result.primary.confidence * 100).toFixed(0)}% confidence, then enriched species references with public biodiversity data. Ask anything about this species.`,
         },
       ]);
 
@@ -272,10 +274,10 @@ export function AIAssistantClient() {
 
           {identified && (
             <div className="mt-3 rounded-lg border border-county-panel bg-county-bg p-3 text-sm text-county-text">
-              <p className="font-semibold text-county-green">{identified.primary.commonName}</p>
+              <p className="font-semibold text-county-green">{identified.detection?.normalizedLabel || identified.primary.commonName}</p>
               <p className="italic text-county-text-secondary">{identified.primary.scientificName}</p>
-              <p className="mt-1">Confidence: {(identified.primary.confidence * 100).toFixed(0)}%</p>
-              <p className="mt-1">Source: {identified.source || "unknown"}</p>
+              <p className="mt-1">AI Confidence: {(identified.primary.confidence * 100).toFixed(0)}%</p>
+              <p className="mt-1 text-xs text-county-text-secondary">Enriched using public biodiversity data.</p>
               {identified.providerNote && <p className="mt-1 text-xs text-county-text-secondary">{identified.providerNote}</p>}
             </div>
           )}

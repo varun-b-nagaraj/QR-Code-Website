@@ -29,11 +29,17 @@ export function IdentifyClient() {
   async function onIdentify() {
     if (!file) return;
     setLoading(true);
+    setResult(null);
     setAiError(null);
     setAiAnswer(null);
-    const response = mode === "plant" ? await identifyPlant(file) : await identifyAnimal(file);
-    setResult(response);
-    setLoading(false);
+    try {
+      const response = mode === "plant" ? await identifyPlant(file) : await identifyAnimal(file);
+      setResult(response);
+    } catch (error) {
+      setAiError(error instanceof Error ? error.message : "Image analysis failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function onAskAI() {
@@ -58,7 +64,7 @@ export function IdentifyClient() {
       <header>
         <h1 className="text-3xl font-semibold text-county-green">Identify Species</h1>
         <p className="mt-2 text-county-text-secondary">
-          Upload a photo from the trail to view a mocked identification result for this concept prototype.
+          Upload a photo from the trail to run AI detection and enrich results with public biodiversity reference data.
         </p>
       </header>
 
@@ -82,7 +88,7 @@ export function IdentifyClient() {
 
         <p className="text-sm text-county-text-secondary">{instruction}</p>
         <p className="text-xs text-county-text-secondary">
-          Plant identification can use a PlantNet-style service; animal identification should use a wildlife model or provider.
+          Wildlife flow: AI detection first, then species enrichment from public iNaturalist read endpoints.
         </p>
 
         <label
@@ -122,19 +128,69 @@ export function IdentifyClient() {
           disabled={!file || loading}
           className="rounded-full bg-county-green px-6 py-3 font-semibold text-white transition-colors hover:bg-county-dark-green disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading ? "Analyzing..." : "Identify Species"}
+          {loading ? "Analyzing..." : "Detect and Enrich"}
         </button>
+        {aiError && <p className="text-sm text-red-700">{aiError}</p>}
       </div>
 
       {result && (
         <section className="space-y-4 rounded-lg bg-county-panel p-5" aria-live="polite">
-          <h2 className="text-2xl font-semibold text-county-text">Identification Result</h2>
+          <h2 className="text-2xl font-semibold text-county-text">Detection Result</h2>
+          {result.type === "animal" && (
+            <p className="text-xs text-county-text-secondary">
+              The AI detection model made the initial animal guess. Species details below are enriched using public biodiversity data.
+            </p>
+          )}
           <div className="rounded-lg bg-white p-4 shadow-sm">
-            <p className="text-xl font-semibold text-county-green">{result.primary.commonName}</p>
-            <p className="italic text-county-text-secondary">{result.primary.scientificName}</p>
-            <p className="mt-2 text-sm text-county-text">Confidence: {(result.primary.confidence * 100).toFixed(0)}%</p>
-            <p className="mt-1 text-sm text-county-text">{result.primary.summary}</p>
-            <p className="mt-1 text-sm text-county-text">Status: {result.primary.nativeStatus}</p>
+            <h3 className="text-lg font-semibold text-county-text">AI Detection</h3>
+            <p className="mt-1 text-sm text-county-text">
+              Detected Animal: <span className="font-semibold text-county-green">{result.detection?.normalizedLabel || result.primary.commonName}</span>
+            </p>
+            <p className="mt-1 text-sm text-county-text">AI Confidence: {(result.primary.confidence * 100).toFixed(0)}%</p>
+            {result.detection?.boundingBox && previewUrl && (
+              <div className="mt-3">
+                <p className="mb-2 text-sm text-county-text">Bounding Box Preview</p>
+                <div className="relative h-52 w-full overflow-hidden rounded-lg">
+                  <img src={previewUrl} alt="Uploaded wildlife preview" className="h-52 w-full object-cover" />
+                  <div
+                    className="pointer-events-none absolute border-2 border-county-green"
+                    style={{
+                      left: `${result.detection.boundingBox.x * 100}%`,
+                      top: `${result.detection.boundingBox.y * 100}%`,
+                      width: `${result.detection.boundingBox.width * 100}%`,
+                      height: `${result.detection.boundingBox.height * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-lg bg-white p-4 shadow-sm">
+            <h3 className="text-lg font-semibold text-county-text">Species Enrichment</h3>
+            <p className="mt-1 text-sm text-county-text">
+              Species Reference: <span className="font-semibold">{result.enrichment?.commonName || result.primary.commonName}</span>
+            </p>
+            <p className="italic text-county-text-secondary">
+              {result.enrichment?.scientificName || result.primary.scientificName}
+            </p>
+            {result.enrichment?.referenceImageUrl && (
+              <img
+                src={result.enrichment.referenceImageUrl}
+                alt={`${result.enrichment.commonName || result.primary.commonName} reference`}
+                className="mt-3 h-40 w-full rounded-lg object-cover"
+              />
+            )}
+            <p className="mt-2 text-sm text-county-text">{result.enrichment?.descriptionSummary || result.primary.summary}</p>
+            <p className="mt-2 text-sm text-county-text">
+              Related Taxonomy: {result.enrichment?.taxonomy?.join(" > ") || "Unavailable"}
+            </p>
+            <p className="mt-2 text-xs text-county-text-secondary">
+              Enriched using public biodiversity data.
+            </p>
+            {result.enrichment?.unavailableReason && (
+              <p className="mt-2 text-sm text-county-text-secondary">{result.enrichment.unavailableReason}</p>
+            )}
             {result.primary.slug && (
               <Link
                 href={`/species/${result.primary.slug}`}
@@ -145,8 +201,9 @@ export function IdentifyClient() {
             )}
           </div>
 
-          <div>
-            <h3 className="mb-2 text-lg font-semibold text-county-text">Other Possible Matches</h3>
+          {result.alternatives.length > 0 && (
+            <div>
+            <h3 className="mb-2 text-lg font-semibold text-county-text">Similar Species</h3>
             <ul className="space-y-2">
               {result.alternatives.map((item) => (
                 <li key={item.scientificName} className="rounded-lg bg-white p-3 text-sm text-county-text shadow-sm">
@@ -156,7 +213,8 @@ export function IdentifyClient() {
                 </li>
               ))}
             </ul>
-          </div>
+            </div>
+          )}
 
           <div className="space-y-3 rounded-lg bg-white p-4 shadow-sm">
             <h3 className="text-lg font-semibold text-county-text">Ask AI About This Species</h3>

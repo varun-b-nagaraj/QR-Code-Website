@@ -6,7 +6,8 @@ export interface SpeciesEnrichment {
   nearbyHotspots?: string[];
 }
 
-export async function enrichSpecies(_species: Species): Promise<SpeciesEnrichment> {
+export async function enrichSpecies(species: Species): Promise<SpeciesEnrichment> {
+  void species;
   // Placeholder for future biodiversity provider integration (e.g. iNaturalist).
   // Future implementation can merge external observations and metadata here.
   return {};
