@@ -24,6 +24,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     initialCategory ? new Set([initialCategory]) : new Set(),
   );
   const [statusFilter, setStatusFilter] = useState<"all" | "Native" | "Invasive">("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
@@ -42,47 +43,61 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
       <p className="mt-2 text-county-text-secondary">Search Central Texas plants and wildlife found near educational trail stops.</p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[240px,1fr]">
-        <aside className="rounded-lg bg-county-bg p-4">
-          <h2 className="mb-3 text-lg font-semibold text-county-text">Filters</h2>
-          <div className="space-y-2">
-            {categoryFilters.map((category) => {
-              const checked = categories.has(category);
-              return (
-                <label key={category} className="flex items-center gap-2 text-sm text-county-text">
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => {
-                      const next = new Set(categories);
-                      if (next.has(category)) next.delete(category);
-                      else next.add(category);
-                      setCategories(next);
-                    }}
-                  />
-                  {category}
-                </label>
-              );
-            })}
-          </div>
+        <aside>
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((value) => !value)}
+            className="inline-flex items-center rounded-full border border-county-panel bg-county-bg px-4 py-2 text-sm font-semibold text-county-text hover:border-county-green"
+            aria-expanded={filtersOpen}
+            aria-controls="species-filters"
+          >
+            {filtersOpen ? "Close Filters" : "Filters"}
+          </button>
 
-          <div className="mt-4 space-y-2 text-sm text-county-text">
-            <label className="flex items-center gap-2">
-              <input type="radio" checked={statusFilter === "all"} onChange={() => setStatusFilter("all")} />
-              All
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="radio" checked={statusFilter === "Native"} onChange={() => setStatusFilter("Native")} />
-              Native
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                checked={statusFilter === "Invasive"}
-                onChange={() => setStatusFilter("Invasive")}
-              />
-              Invasive
-            </label>
-          </div>
+          {filtersOpen && (
+            <div id="species-filters" className="mt-3 rounded-lg bg-county-bg p-4">
+              <h2 className="mb-3 text-lg font-semibold text-county-text">Filters</h2>
+              <div className="space-y-2">
+                {categoryFilters.map((category) => {
+                  const checked = categories.has(category);
+                  return (
+                    <label key={category} className="flex items-center gap-2 text-sm text-county-text">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          const next = new Set(categories);
+                          if (next.has(category)) next.delete(category);
+                          else next.add(category);
+                          setCategories(next);
+                        }}
+                      />
+                      {category}
+                    </label>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4 space-y-2 text-sm text-county-text">
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={statusFilter === "all"} onChange={() => setStatusFilter("all")} />
+                  All
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={statusFilter === "Native"} onChange={() => setStatusFilter("Native")} />
+                  Native
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    checked={statusFilter === "Invasive"}
+                    onChange={() => setStatusFilter("Invasive")}
+                  />
+                  Invasive
+                </label>
+              </div>
+            </div>
+          )}
         </aside>
 
         <div>

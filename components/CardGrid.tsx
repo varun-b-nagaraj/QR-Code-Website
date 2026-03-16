@@ -1,9 +1,10 @@
 import { InfoCard } from "@/components/InfoCard";
+import { StaticImageData } from "next/image";
 
 interface CardItem {
   title: string;
   description: string;
-  image: string;
+  image: string | StaticImageData;
   href: string;
 }
 

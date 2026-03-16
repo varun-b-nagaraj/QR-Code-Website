@@ -37,10 +37,17 @@ function buildSpeciesContext(identified: IdentificationResult | null): string {
 
 function cleanAssistantText(value: string): string {
   return value
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/^\s*>\s?/gm, "")
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/__(.*?)__/g, "$1")
+    .replace(/\*([^*\n]+)\*/g, "$1")
+    .replace(/_([^_\n]+)_/g, "$1")
     .replace(/`([^`]+)`/g, "$1")
-    .replace(/^[-*]\s+/gm, "• ");
+    .replace(/^\s*[-*]\s+/gm, "• ")
+    .replace(/^\s*\d+\.\s+/gm, "• ")
+    .replace(/[ \t]+\n/g, "\n")
+    .trim();
 }
 
 function findDroppedImage(files: FileList): File | null {
@@ -331,67 +338,72 @@ export function AIAssistantClient() {
       )}
 
       <div className="flex min-h-0 flex-1 flex-col">
-        <header className="relative border-b border-county-panel px-4 py-3 sm:px-6">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-semibold text-county-green">Trail Chatbot</h1>
-              <p className="text-sm text-county-text-secondary">Tap + to add a photo, then chat with the detected species context.</p>
-            </div>
+        <div className="pointer-events-none absolute right-4 top-3 z-20 sm:right-6">
+          <div className="pointer-events-auto">
             <button
               type="button"
               onClick={() => setActionsOpen((prev) => !prev)}
-              className="rounded-full bg-county-green px-3 py-1 text-xl leading-none text-white"
+              className="rounded-full bg-county-green px-3 py-1 text-xl leading-none text-white shadow-sm"
               aria-label="Add photo"
             >
               +
             </button>
+
+            {actionsOpen && (
+              <div className="absolute right-0 top-12 z-20 w-56 rounded-xl border border-county-panel bg-white p-2 shadow-md">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActionsOpen(false);
+                    fileInputRef.current?.click();
+                  }}
+                  className="w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+                >
+                  Add image from device
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void openCamera()}
+                  className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+                >
+                  Open camera and scan
+                </button>
+              </div>
+            )}
           </div>
+        </div>
 
-          {actionsOpen && (
-            <div className="absolute right-4 top-16 z-20 w-56 rounded-xl border border-county-panel bg-white p-2 shadow-md sm:right-6">
-              <button
-                type="button"
-                onClick={() => {
-                  setActionsOpen(false);
-                  fileInputRef.current?.click();
-                }}
-                className="w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
-              >
-                Add image from device
-              </button>
-              <button
-                type="button"
-                onClick={() => void openCamera()}
-                className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
-              >
-                Open camera and scan
-              </button>
-            </div>
-          )}
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(event) => {
-              const selected = event.target.files?.[0] ?? null;
-              if (selected) {
-                void processSelectedFile(selected);
-              }
-              event.currentTarget.value = "";
-            }}
-          />
-        </header>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(event) => {
+            const selected = event.target.files?.[0] ?? null;
+            if (selected) {
+              void processSelectedFile(selected);
+            }
+            event.currentTarget.value = "";
+          }}
+        />
 
         {(previewUrl || identified || identifyLoading || identifyError || cameraError) && (
           <div className="border-b border-county-panel bg-county-bg px-4 py-3 sm:px-6">
             {previewUrl && <img src={previewUrl} alt="Species upload preview" className="h-24 w-24 rounded-lg object-cover" />}
             {identifyLoading && <p className="mt-2 text-sm text-county-text">Analyzing photo with plant + animal models...</p>}
             {identified && (
-              <p className="mt-2 text-sm text-county-text">
-                Best match: <span className="font-semibold text-county-green">{identified.primary.commonName}</span> ({(identified.primary.confidence * 100).toFixed(0)}%)
-              </p>
+              <div className="mt-2 space-y-1 text-sm text-county-text">
+                <p>
+                  Best match: <span className="font-semibold text-county-green">{identified.primary.commonName}</span>{" "}
+                  <span className="italic">({identified.primary.scientificName})</span>
+                </p>
+                <p>
+                  Confidence: {(identified.primary.confidence * 100).toFixed(0)}% • Type: {identified.type}
+                  {identified.detection?.normalizedLabel ? ` • AI label: ${identified.detection.normalizedLabel}` : ""}
+                </p>
+                {identified.enrichment?.taxonomy?.length ? <p>Taxonomy: {identified.enrichment.taxonomy.join(" > ")}</p> : null}
+                {identified.providerNote ? <p className="text-county-text-secondary">{identified.providerNote}</p> : null}
+              </div>
             )}
             {identifyError && <p className="mt-2 text-sm text-red-700">{identifyError}</p>}
             {cameraError && <p className="mt-2 text-sm text-red-700">{cameraError}</p>}

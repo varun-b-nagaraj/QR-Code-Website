@@ -1,42 +1,48 @@
 import { CardGrid } from "@/components/CardGrid";
 import { ContactPanel } from "@/components/ContactPanel";
 import { HeroSearch } from "@/components/HeroSearch";
+import aboutImage from "@/public/images/about.png";
+import conservationImage from "@/public/images/conservation.png";
+import historyImage from "@/public/images/history.png";
+import identifyImage from "@/public/images/identify.png";
+import mapImage from "@/public/images/map.png";
+import nativeImage from "@/public/images/native.png";
 
 const cardItems = [
   {
     title: "Identify Plants and Wildlife",
     description: "Upload a photo to identify plants and wildlife around the park.",
-    image: "/images/identify-card.svg",
+    image: identifyImage,
     href: "/ai",
   },
   {
     title: "Trail Map",
     description: "Explore park trails and discover educational stops.",
-    image: "/images/trail-map-card.svg",
+    image: mapImage,
     href: "/trails/champion-park-trail",
   },
   {
     title: "Native Species Library",
     description: "Browse native plants and animals found in the park.",
-    image: "/images/species-library-card.svg",
+    image: nativeImage,
     href: "/species",
   },
   {
     title: "Conservation Information",
     description: "Learn how to protect local ecosystems and habitats.",
-    image: "/images/conservation-card.svg",
+    image: conservationImage,
     href: "/about",
   },
   {
     title: "Park History",
     description: "Learn how these parks, trails, and conservation efforts developed over time.",
-    image: "/images/history-card.svg",
+    image: historyImage,
     href: "/park-history",
   },
   {
     title: "About",
     description: "Understand this project concept, educational goals, and technology approach.",
-    image: "/images/conservation-card.svg",
+    image: aboutImage,
     href: "/about",
   },
 ];

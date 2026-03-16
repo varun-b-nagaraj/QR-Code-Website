@@ -50,11 +50,14 @@ export function Header() {
               </Link>
             );
           })}
-          <details className="group relative ml-1">
-            <summary className="list-none cursor-pointer whitespace-nowrap rounded-md px-2 py-2 text-sm font-semibold text-county-blue transition-colors hover:text-county-green">
+          <div className="group relative ml-1">
+            <button
+              type="button"
+              className="cursor-pointer whitespace-nowrap rounded-md px-2 py-2 text-sm font-semibold text-county-blue transition-colors hover:text-county-green"
+            >
               More Info
-            </summary>
-            <div className="absolute left-0 top-10 z-40 w-52 rounded-lg border border-county-panel bg-white p-2 shadow-md">
+            </button>
+            <div className="invisible absolute left-0 top-10 z-40 w-52 translate-y-1 rounded-lg border border-county-panel bg-white p-2 opacity-0 shadow-md transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
               {moreInfoItems.map((item) => {
                 const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href.split("?")[0]));
                 return (
@@ -70,7 +73,7 @@ export function Header() {
                 );
               })}
             </div>
-          </details>
+          </div>
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 lg:flex">
