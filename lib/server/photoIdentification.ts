@@ -1,7 +1,14 @@
 import { species } from "@/data/species";
 import { fetchInaturalistEnrichment } from "@/lib/server/inaturalistEnrichment";
 import { normalizeAnimalLabel } from "@/lib/server/labelNormalization";
-import { DetectionBoundingBox, IdentificationCandidate, IdentificationResult, NativeStatus, Species } from "@/lib/types";
+import {
+  DetectionBoundingBox,
+  IdentificationCandidate,
+  IdentificationResult,
+  NativeStatus,
+  Species,
+  SpeciesEnrichmentResult,
+} from "@/lib/types";
 
 type IdentifyMode = "plant" | "animal";
 
@@ -88,7 +95,7 @@ async function identifyAnimalWithDetectionAndEnrichment(file: File): Promise<Ide
   const detectionSummary = `AI detector guessed ${normalized.normalizedLabel} from the uploaded image.`;
   let providerNote = "Enriched using public biodiversity data.";
 
-  let enrichment = await fetchInaturalistEnrichment(normalized.normalizedLabel).catch((error) => {
+  let enrichment: SpeciesEnrichmentResult = await fetchInaturalistEnrichment(normalized.normalizedLabel).catch((error) => {
     const message = error instanceof Error ? error.message : "Species enrichment unavailable.";
     providerNote = `Detection completed. ${message}`;
     return {
