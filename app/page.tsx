@@ -1,65 +1,71 @@
-import Image from "next/image";
+import { CardGrid } from "@/components/CardGrid";
+import { ContactPanel } from "@/components/ContactPanel";
+import { HeroSearch } from "@/components/HeroSearch";
+
+const cardItems = [
+  {
+    title: "Identify Plants and Wildlife",
+    description: "Upload a photo to identify plants and wildlife around the park.",
+    image: "/images/identify-card.svg",
+    href: "/identify",
+  },
+  {
+    title: "Trail Map",
+    description: "Explore park trails and discover educational stops.",
+    image: "/images/trail-map-card.svg",
+    href: "/trails/champion-park-trail",
+  },
+  {
+    title: "Native Species Library",
+    description: "Browse native plants and animals found in the park.",
+    image: "/images/species-library-card.svg",
+    href: "/species",
+  },
+  {
+    title: "Conservation Information",
+    description: "Learn how to protect local ecosystems and habitats.",
+    image: "/images/conservation-card.svg",
+    href: "/about",
+  },
+  {
+    title: "Educational Stops",
+    description: "Preview what visitors see after scanning trail signage QR codes.",
+    image: "/images/stop-card.svg",
+    href: "/sign/native-plants-stop",
+  },
+  {
+    title: "Park History",
+    description: "Understand how the county trail system supports community learning.",
+    image: "/images/history-card.svg",
+    href: "/about",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <HeroSearch
+        imageSrc="/images/hero-park.svg"
+        title="Educational Trail Experience"
+        placeholder="Search plants, animals, trails, or park info..."
+      />
+
+      <section className="relative z-10 mx-auto -mt-10 w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+        <div className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr,280px]">
+            <section>
+              <p className="text-sm text-county-text-secondary">Home › Departments › Parks</p>
+              <h1 className="mt-2 text-4xl font-semibold text-county-green">Educational Trail Experience</h1>
+              <h2 className="mt-3 text-3xl font-semibold text-county-dark-green">Explore and Learn</h2>
+              <div className="mt-5">
+                <CardGrid items={cardItems} />
+              </div>
+            </section>
+
+            <ContactPanel />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+  <title id="title">County Park Aerial Style Banner</title>
+  <desc id="desc">Illustrated green park landscape for hero background.</desc>
+  <rect width="1600" height="700" fill="#cad9c3"/>
+  <rect y="80" width="1600" height="260" fill="#9db58f"/>
+  <rect y="340" width="1600" height="360" fill="#7d996a"/>
+  <ellipse cx="280" cy="430" rx="260" ry="120" fill="#5b8c3b" opacity="0.75"/>
+  <ellipse cx="820" cy="470" rx="360" ry="140" fill="#3e6f2e" opacity="0.72"/>
+  <ellipse cx="1320" cy="430" rx="260" ry="110" fill="#4b7f35" opacity="0.72"/>
+  <path d="M0 520 Q380 460 780 520 T1600 520 L1600 700 L0 700 Z" fill="#e2d8b8" opacity="0.92"/>
+  <path d="M180 548 Q490 520 860 548 T1470 548" stroke="#d4c49c" stroke-width="20" fill="none" stroke-linecap="round"/>
+</svg>
