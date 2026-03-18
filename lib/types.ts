@@ -3,26 +3,18 @@ export type SpeciesCategory =
   | "Birds"
   | "Mammals"
   | "Reptiles"
-  | "Insects"
-  | "Trees";
+  | "Insects";
 
-export type NativeStatus = "Native" | "Invasive" | "Unknown";
-export type PlantSubcategory =
-  | "Trees"
-  | "Shrubs"
-  | "Vines"
-  | "Grasses"
-  | "Wildflowers"
-  | "Invasive Watchlist"
-  | "Additional Insights";
+export type NativeStatus = "Native" | "Invasive" | "Introduced" | "Unknown";
 
 export interface Species {
   slug: string;
   commonName: string;
   scientificName: string;
   category: SpeciesCategory;
-  plantSubcategory?: PlantSubcategory;
+  subcategory?: string;
   nativeStatus: NativeStatus;
+  nativeStatusRaw?: string;
   image: string;
   summary: string;
   description: string;

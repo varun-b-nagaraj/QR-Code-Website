@@ -29,7 +29,7 @@ export default async function SpeciesDetailPage({
           <h1 className="text-4xl font-semibold text-county-green">{item.commonName}</h1>
           <p className="text-lg italic text-county-text-secondary">{item.scientificName}</p>
           <span className="inline-block rounded-full bg-county-panel px-3 py-1 text-sm font-semibold text-county-text">
-            {item.nativeStatus}
+            {item.nativeStatusRaw || item.nativeStatus}
           </span>
 
           <section>

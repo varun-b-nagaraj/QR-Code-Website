@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { InfoCard } from "@/components/InfoCard";
-import { PlantSubcategory, Species, SpeciesCategory } from "@/lib/types";
+import { Species, SpeciesCategory } from "@/lib/types";
 
 const categoryFilters: SpeciesCategory[] = [
   "Plants",
@@ -10,16 +10,6 @@ const categoryFilters: SpeciesCategory[] = [
   "Mammals",
   "Reptiles",
   "Insects",
-];
-
-const plantSubcategoryFilters: PlantSubcategory[] = [
-  "Trees",
-  "Shrubs",
-  "Vines",
-  "Grasses",
-  "Wildflowers",
-  "Invasive Watchlist",
-  "Additional Insights",
 ];
 
 interface SpeciesLibraryClientProps {
@@ -32,21 +22,31 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
   const [categories, setCategories] = useState<Set<SpeciesCategory>>(
     initialCategory ? new Set([initialCategory]) : new Set(),
   );
-  const [statusFilter, setStatusFilter] = useState<"all" | "Native" | "Invasive">("all");
-  const [plantSubcategories, setPlantSubcategories] = useState<Set<PlantSubcategory>>(new Set());
+  const [statusFilter, setStatusFilter] = useState<"all" | "Native" | "Invasive" | "Introduced">("all");
+  const [selectedSubcategories, setSelectedSubcategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useState<Set<SpeciesCategory>>(
+    initialCategory ? new Set([initialCategory]) : new Set(),
+  );
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [plantDropdownOpen, setPlantDropdownOpen] = useState(initialCategory === "Plants");
-  const plantsCheckboxRef = useRef<HTMLInputElement>(null);
 
-  const plantsChecked = categories.has("Plants");
-  const selectedPlantSubcategoryCount = plantSubcategories.size;
-  const allPlantSubcategoriesSelected = selectedPlantSubcategoryCount === plantSubcategoryFilters.length;
+  const subcategoriesByCategory = useMemo(() => {
+    const map = new Map<SpeciesCategory, string[]>();
 
-  useEffect(() => {
-    if (!plantsCheckboxRef.current) return;
-    plantsCheckboxRef.current.indeterminate =
-      plantsChecked && selectedPlantSubcategoryCount > 0 && !allPlantSubcategoriesSelected;
-  }, [allPlantSubcategoriesSelected, plantsChecked, selectedPlantSubcategoryCount]);
+    for (const category of categoryFilters) {
+      const values = Array.from(
+        new Set(
+          items
+            .filter((item) => item.category === category)
+            .map((item) => item.subcategory)
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ).sort((a, b) => a.localeCompare(b));
+
+      map.set(category, values);
+    }
+
+    return map;
+  }, [items]);
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
@@ -55,20 +55,19 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
         item.scientificName.toLowerCase().includes(query.toLowerCase());
       const categoryMatch = categories.size === 0 || categories.has(item.category);
       const statusMatch = statusFilter === "all" || item.nativeStatus === statusFilter;
-      const plantSubcategoryMatch =
-        item.category !== "Plants" ||
-        plantSubcategories.size === 0 ||
-        (item.plantSubcategory ? plantSubcategories.has(item.plantSubcategory) : false);
-      return textMatch && categoryMatch && statusMatch && plantSubcategoryMatch;
+      const subcategoryMatch =
+        selectedSubcategories.size === 0 || (item.subcategory ? selectedSubcategories.has(item.subcategory) : false);
+
+      return textMatch && categoryMatch && statusMatch && subcategoryMatch;
     });
-  }, [categories, items, plantSubcategories, query, statusFilter]);
+  }, [categories, items, query, selectedSubcategories, statusFilter]);
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
       <h1 className="text-3xl font-semibold text-county-green">Species Library</h1>
       <p className="mt-2 text-county-text-secondary">Search Central Texas plants and wildlife found near educational trail stops.</p>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[240px,1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[260px,1fr]">
         <aside>
           <button
             type="button"
@@ -86,105 +85,87 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               <div className="space-y-2">
                 {categoryFilters.map((category) => {
                   const checked = categories.has(category);
-                  if (category === "Plants") {
-                    return (
-                      <div key={category} className="space-y-2">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <input
-                              ref={plantsCheckboxRef}
-                              type="checkbox"
-                              checked={checked}
-                              onChange={() => {
-                                const next = new Set(categories);
-                                if (next.has(category)) next.delete(category);
-                                else next.add(category);
-                                setCategories(next);
-                                if (!next.has(category)) {
-                                  setPlantSubcategories(new Set());
-                                } else {
-                                  setPlantDropdownOpen(true);
-                                }
-                              }}
-                            />
-                            <button
-                              type="button"
-                              className="text-sm text-county-text"
-                              onClick={() => {
-                                setPlantDropdownOpen((value) => !value);
-                                if (!categories.has("Plants")) {
-                                  const next = new Set(categories);
-                                  next.add("Plants");
-                                  setCategories(next);
-                                }
-                              }}
-                              aria-expanded={plantDropdownOpen}
-                              aria-controls="plant-subcategory-filters"
-                            >
-                              Plants
-                            </button>
-                            {selectedPlantSubcategoryCount > 0 && (
-                              <span className="rounded-full bg-county-panel px-2 py-0.5 text-xs font-semibold text-county-text">
-                                {selectedPlantSubcategoryCount}
-                              </span>
-                            )}
-                          </div>
-                          <button
-                            type="button"
-                            className="text-sm font-semibold text-county-green"
-                            onClick={() => setPlantDropdownOpen((value) => !value)}
-                            aria-expanded={plantDropdownOpen}
-                            aria-controls="plant-subcategory-filters"
-                          >
-                            {plantDropdownOpen ? "▾" : "▸"}
-                          </button>
-                        </div>
-
-                        {plantDropdownOpen && (
-                          <div id="plant-subcategory-filters" className="ml-5 space-y-2">
-                            {plantSubcategoryFilters.map((subcategory) => {
-                              const subcategoryChecked = plantSubcategories.has(subcategory);
-                              return (
-                                <label key={subcategory} className="flex items-center gap-2 text-sm text-county-text">
-                                  <input
-                                    type="checkbox"
-                                    checked={subcategoryChecked}
-                                    onChange={() => {
-                                      const next = new Set(plantSubcategories);
-                                      if (next.has(subcategory)) next.delete(subcategory);
-                                      else next.add(subcategory);
-                                      setPlantSubcategories(next);
-                                      if (!categories.has("Plants")) {
-                                        const nextCategories = new Set(categories);
-                                        nextCategories.add("Plants");
-                                        setCategories(nextCategories);
-                                      }
-                                    }}
-                                  />
-                                  {subcategory}
-                                </label>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
+                  const subcategories = subcategoriesByCategory.get(category) || [];
+                  const isExpanded = expandedCategories.has(category);
+                  const selectedCount = subcategories.filter((value) => selectedSubcategories.has(value)).length;
 
                   return (
-                    <label key={category} className="flex items-center gap-2 text-sm text-county-text">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => {
-                          const next = new Set(categories);
-                          if (next.has(category)) next.delete(category);
-                          else next.add(category);
-                          setCategories(next);
-                        }}
-                      />
-                      {category}
-                    </label>
+                    <div key={category} className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <label className="flex items-center gap-2 text-sm text-county-text">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => {
+                              const next = new Set(categories);
+                              if (next.has(category)) next.delete(category);
+                              else next.add(category);
+                              setCategories(next);
+
+                              if (!next.has(category)) {
+                                const nextSubcategories = new Set(selectedSubcategories);
+                                for (const value of subcategories) nextSubcategories.delete(value);
+                                setSelectedSubcategories(nextSubcategories);
+                              }
+                            }}
+                          />
+                          {category}
+                        </label>
+
+                        <div className="flex items-center gap-2">
+                          {selectedCount > 0 && (
+                            <span className="rounded-full bg-county-panel px-2 py-0.5 text-xs font-semibold text-county-text">
+                              {selectedCount}
+                            </span>
+                          )}
+                          {subcategories.length > 0 && (
+                            <button
+                              type="button"
+                              className="text-sm font-semibold text-county-green"
+                              onClick={() => {
+                                const next = new Set(expandedCategories);
+                                if (next.has(category)) next.delete(category);
+                                else next.add(category);
+                                setExpandedCategories(next);
+                              }}
+                              aria-expanded={isExpanded}
+                              aria-controls={`subcategory-${category}`}
+                            >
+                              {isExpanded ? "▾" : "▸"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {isExpanded && subcategories.length > 0 && (
+                        <div id={`subcategory-${category}`} className="ml-5 space-y-2">
+                          {subcategories.map((value) => {
+                            const isSelected = selectedSubcategories.has(value);
+                            return (
+                              <label key={`${category}-${value}`} className="flex items-center gap-2 text-sm text-county-text">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => {
+                                    const next = new Set(selectedSubcategories);
+                                    if (next.has(value)) next.delete(value);
+                                    else next.add(value);
+                                    setSelectedSubcategories(next);
+
+                                    if (!categories.has(category)) {
+                                      const nextCategories = new Set(categories);
+                                      nextCategories.add(category);
+                                      setCategories(nextCategories);
+                                    }
+                                  }}
+                                />
+                                {value}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -199,12 +180,12 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
                   Native
                 </label>
                 <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={statusFilter === "Invasive"}
-                    onChange={() => setStatusFilter("Invasive")}
-                  />
+                  <input type="radio" checked={statusFilter === "Invasive"} onChange={() => setStatusFilter("Invasive")} />
                   Invasive
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={statusFilter === "Introduced"} onChange={() => setStatusFilter("Introduced")} />
+                  Introduced
                 </label>
               </div>
             </div>
@@ -225,7 +206,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               <InfoCard
                 key={item.slug}
                 title={item.commonName}
-                description={`${item.scientificName} • ${item.nativeStatus}`}
+                description={`${item.scientificName} • ${item.nativeStatusRaw || item.nativeStatus}`}
                 image={item.image}
                 href={`/species/${item.slug}`}
               />

@@ -8,7 +8,6 @@ const validCategories = new Set<SpeciesCategory>([
   "Mammals",
   "Reptiles",
   "Insects",
-  "Trees",
 ]);
 
 export default async function SpeciesPage({
