@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { InsightCover } from "@/components/InsightCover";
 import { speciesBySlug } from "@/data/species";
 import { Species } from "@/lib/types";
 
@@ -106,8 +105,15 @@ export default async function SpeciesDetailPage({
             </div>
 
             <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
-              <div className="aspect-[4/3] w-full p-4">
-                <InsightCover category={item.category} title={item.commonName} subtitle={item.summary} />
+              <div className="relative aspect-[4/3] w-full p-3">
+                <Image
+                  src={item.image}
+                  alt={item.commonName}
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
               </div>
             </div>
           </div>

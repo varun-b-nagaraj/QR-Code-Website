@@ -47,13 +47,32 @@ function splitTitle(title: string) {
   const words = title.split(" ");
   if (words.length <= 2) return [title];
 
-  const midpoint = Math.ceil(words.length / 2);
-  return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")];
+  const maxCharsPerLine = 18;
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (candidate.length <= maxCharsPerLine || !current) {
+      current = candidate;
+      continue;
+    }
+
+    lines.push(current);
+    current = word;
+  }
+
+  if (current) lines.push(current);
+
+  if (lines.length <= 3) return lines;
+  const merged = [...lines.slice(0, 2), lines.slice(2).join(" ")];
+  return merged;
 }
 
 export function InsightCover({ category, title, subtitle, compact = false }: InsightCoverProps) {
   const palette = paletteByCategory[category] ?? paletteByCategory.Plants;
   const lines = splitTitle(title);
+  const isLongTitle = title.length > 38;
 
   return (
     <div className={`relative h-full w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-br ${palette.shell}`}>
@@ -67,23 +86,21 @@ export function InsightCover({ category, title, subtitle, compact = false }: Ins
         <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${palette.text} opacity-70 ${compact ? "" : "sm:text-xs"}`}>
           {category} Insight
         </p>
-        <div className={`${compact ? "mt-5 space-y-1" : "mt-8 space-y-2 sm:mt-10"}`}>
+        <div className={`${compact ? "mt-5 space-y-1" : "mt-7 space-y-2 sm:mt-9"}`}>
           {lines.map((line) => (
             <div
               key={line}
               className={`font-serif font-bold uppercase leading-[0.95] ${palette.text} ${
-                compact ? "text-[1.35rem]" : "text-4xl sm:text-5xl"
+                compact ? "text-[1.15rem]" : isLongTitle ? "text-3xl sm:text-4xl" : "text-4xl sm:text-5xl"
               }`}
             >
               {line}
             </div>
           ))}
         </div>
-        {subtitle && (
+        {!compact && subtitle && (
           <p
-            className={`absolute ${compact ? "bottom-6 max-w-[78%] text-[11px]" : "bottom-8 max-w-[80%] text-sm sm:text-base"} ${
-              palette.text
-            } opacity-72`}
+            className={`absolute bottom-8 max-w-[80%] text-sm sm:text-base ${palette.text} opacity-72`}
           >
             {subtitle}
           </p>

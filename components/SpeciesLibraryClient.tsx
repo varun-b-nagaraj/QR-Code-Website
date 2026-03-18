@@ -231,7 +231,6 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               image={item.image}
               href={`/species/${item.slug}`}
               tag={buildCardTag(item)}
-              insightCategory={item.scientificName === "N/A" ? item.category : undefined}
             />
           ))}
         </div>
