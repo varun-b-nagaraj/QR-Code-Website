@@ -227,7 +227,11 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
             <InfoCard
               key={item.slug}
               title={item.commonName}
-              description={`${item.scientificName} • ${item.nativeStatusRaw || item.nativeStatus}`}
+              description={
+                item.subcategory === "Additional Insights" || item.scientificName === "N/A"
+                  ? "Additional Insights"
+                  : `${item.scientificName} • ${item.nativeStatusRaw || item.nativeStatus}`
+              }
               image={item.image}
               href={`/species/${item.slug}`}
               tag={buildCardTag(item)}

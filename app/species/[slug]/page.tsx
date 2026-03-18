@@ -8,8 +8,30 @@ export function generateStaticParams() {
   return Object.keys(speciesBySlug).map((slug) => ({ slug }));
 }
 
+function normalizeInlineBulletLists(text: string) {
+  return text
+    .split("\n\n")
+    .map((paragraph) => {
+      const block = paragraph.trim();
+      if (!block || block.includes("\n- ")) return block;
+
+      const dashMatches = block.match(/\s-\s/g) ?? [];
+      const hasInlineListPattern = block.includes(": - ") || dashMatches.length >= 2;
+      if (!hasInlineListPattern) return block;
+
+      const segments = block.split(/\s-\s/).map((part) => part.trim()).filter(Boolean);
+      if (segments.length <= 1) return block;
+
+      const [lead, ...items] = segments;
+      const lines = [lead, ...items.map((item) => `- ${item}`)];
+      return lines.join("\n");
+    })
+    .join("\n\n");
+}
+
 function renderTextBlock(text: string, className = "mt-1 text-county-text") {
-  const blocks = text
+  const normalized = normalizeInlineBulletLists(text);
+  const blocks = normalized
     .split("\n\n")
     .map((block) => block.trim())
     .filter(Boolean);

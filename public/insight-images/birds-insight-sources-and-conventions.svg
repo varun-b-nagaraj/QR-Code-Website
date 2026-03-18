@@ -5,8 +5,8 @@
 <path d="M0 910C245 810 470 780 690 846C930 918 1140 1065 1600 904V1200H0V910Z" fill="#B7B182"/>
 <rect x="88" y="88" width="1424" height="1024" rx="44" fill="#FBFBF7" stroke="#7D7853" stroke-opacity="0.22" stroke-width="4"/>
 <text x="128" y="258" fill="#7D7853" font-family="Georgia, serif" font-size="36" letter-spacing="6">BIRDS INSIGHT</text>
-<text x="128" y="455" fill="#292612" font-family="Georgia, serif" font-size="108" font-weight="700">SOURCES</text>
-<text x="128" y="595" fill="#292612" font-family="Georgia, serif" font-size="108" font-weight="700">& RULES</text>
+<text x="128" y="455" fill="#292612" font-family="Georgia, serif" font-size="100" font-weight="700">SOURCES</text>
+<text x="128" y="585" fill="#292612" font-family="Georgia, serif" font-size="100" font-weight="700">AND RULES</text>
 <text x="132" y="810" fill="#727167" font-family="Arial, sans-serif" font-size="36">Reference frame, naming choices, and status conventions</text>
 <rect x="128" y="868" width="220" height="10" rx="5" fill="#7D7853" fill-opacity="0.45"/>
 <rect x="128" y="902" width="150" height="10" rx="5" fill="#7D7853" fill-opacity="0.24"/>
