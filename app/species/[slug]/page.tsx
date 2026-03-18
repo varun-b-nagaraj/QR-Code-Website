@@ -38,7 +38,10 @@ function renderTextBlock(text: string, className = "mt-1 text-county-text") {
 
   return blocks.map((block, index) => {
     const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
-    const isList = lines.every((line) => line.startsWith("- "));
+    const bulletLines = lines.filter((line) => line.startsWith("- "));
+    const nonBulletLines = lines.filter((line) => !line.startsWith("- "));
+    const isList = lines.length > 0 && bulletLines.length === lines.length;
+    const hasMixedList = bulletLines.length > 0 && nonBulletLines.length > 0;
 
     if (isList) {
       return (
@@ -47,6 +50,19 @@ function renderTextBlock(text: string, className = "mt-1 text-county-text") {
             <li key={line}>{line.slice(2)}</li>
           ))}
         </ul>
+      );
+    }
+
+    if (hasMixedList) {
+      return (
+        <div key={`${block}-${index}`} className="space-y-2">
+          <p className={className}>{nonBulletLines.join(" ")}</p>
+          <ul className={`${className} ml-5 list-disc space-y-2`}>
+            {bulletLines.map((line) => (
+              <li key={line}>{line.slice(2)}</li>
+            ))}
+          </ul>
+        </div>
       );
     }
 
