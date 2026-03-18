@@ -55,6 +55,19 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     return map;
   }, [items]);
 
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<SpeciesCategory, number>();
+
+    for (const category of categoryFilters) {
+      counts.set(
+        category,
+        items.filter((item) => item.category === category && item.scientificName !== "N/A").length,
+      );
+    }
+
+    return counts;
+  }, [items]);
+
   const filtered = useMemo(() => {
     return items.filter((item) => {
       const textMatch =
@@ -101,9 +114,9 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               return (
                 <div key={category} className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <label className="flex items-center gap-2 text-sm text-county-text">
-                      <input
-                        type="checkbox"
+                        <label className="flex items-center gap-2 text-sm text-county-text">
+                          <input
+                            type="checkbox"
                         checked={checked}
                         onChange={() => {
                           const next = new Set(categories);
@@ -116,10 +129,10 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
                             for (const value of subcategories) nextSubcategories.delete(value);
                             setSelectedSubcategories(nextSubcategories);
                           }
-                        }}
-                      />
-                      {category}
-                    </label>
+                            }}
+                          />
+                          {category} ({categoryCounts.get(category) ?? 0})
+                        </label>
 
                     <div className="flex items-center gap-2">
                       {selectedCount > 0 && (
@@ -218,6 +231,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               image={item.image}
               href={`/species/${item.slug}`}
               tag={buildCardTag(item)}
+              insightCategory={item.scientificName === "N/A" ? item.category : undefined}
             />
           ))}
         </div>

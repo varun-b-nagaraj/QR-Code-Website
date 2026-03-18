@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { InsightCover } from "@/components/InsightCover";
 import { speciesBySlug } from "@/data/species";
 import { Species } from "@/lib/types";
 
@@ -40,6 +41,28 @@ function isInsight(item: Species) {
   return item.subcategory === "Additional Insights" || item.scientificName === "N/A";
 }
 
+function getInsightSupportCopy(item: Species) {
+  if (item.category === "Plants") {
+    return {
+      title: "Why this matters on the trail",
+      body:
+        "Plant knowledge becomes more useful when it connects to place. These insight pages tie species profiles to habitats, seasonal patterns, and stewardship questions that visitors can actually notice while walking the park.",
+      titleTwo: "How to use this page",
+      bodyTwo:
+        "Start with the main idea, then use the full text to connect what you see on the trail with the larger structure of the Brushy Creek landscape.",
+    };
+  }
+
+  return {
+    title: "Why this matters",
+    body:
+      "This article adds context around the species library so visitors can connect individual sightings to habitat, behavior, and broader park ecology.",
+    titleTwo: "How to use this page",
+    bodyTwo:
+      "Use the overview to get oriented, then read the main text for the deeper ecological frame behind the category.",
+  };
+}
+
 export default async function SpeciesDetailPage({
   params,
 }: {
@@ -60,36 +83,58 @@ export default async function SpeciesDetailPage({
   ].filter((section) => section.value.trim());
 
   if (insight) {
+    const detailBlocks =
+      item.description.trim() === item.summary.trim()
+        ? []
+        : renderTextBlock(item.description, "mt-3 text-county-text leading-7");
+    const supportCopy = getInsightSupportCopy(item);
+
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <article className="overflow-hidden rounded-2xl bg-white shadow-sm">
-          <div className="relative h-72 w-full sm:h-96">
-            <Image src={item.image} alt={item.commonName} fill className="object-cover" priority />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
+          <div className="grid gap-6 bg-county-bg p-6 sm:p-8 md:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] md:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-county-text-secondary">
                 {item.category} Insight
               </p>
-              <h1 className="mt-2 max-w-3xl text-4xl font-semibold">{item.commonName}</h1>
+              <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight text-county-dark-green sm:text-5xl">
+                {item.commonName}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-county-text">
+                {item.summary}
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+              <div className="aspect-[4/3] w-full p-4">
+                <InsightCover category={item.category} title={item.commonName} subtitle={item.summary} />
+              </div>
             </div>
           </div>
 
           <div className="space-y-8 p-6 sm:p-8">
             <section className="rounded-2xl bg-county-bg p-5">
-              <h2 className="text-xl font-semibold text-county-dark-green">Article Overview</h2>
-              {renderTextBlock(item.description, "mt-3 text-county-text leading-7")}
+              <h2 className="text-xl font-semibold text-county-dark-green">Overview</h2>
+              {renderTextBlock(item.summary, "mt-3 text-county-text leading-7")}
             </section>
 
             <div className="grid gap-6 md:grid-cols-2">
               <section className="rounded-2xl border border-county-panel p-5">
-                <h2 className="text-lg font-semibold text-county-dark-green">Library Type</h2>
-                <p className="mt-2 text-county-text">{item.category} Additional Insight</p>
+                <h2 className="text-lg font-semibold text-county-dark-green">{supportCopy.title}</h2>
+                <p className="mt-2 text-county-text">{supportCopy.body}</p>
               </section>
               <section className="rounded-2xl border border-county-panel p-5">
-                <h2 className="text-lg font-semibold text-county-dark-green">Format</h2>
-                <p className="mt-2 text-county-text">Long-form article content for context, habitat framing, and interpretation.</p>
+                <h2 className="text-lg font-semibold text-county-dark-green">{supportCopy.titleTwo}</h2>
+                <p className="mt-2 text-county-text">{supportCopy.bodyTwo}</p>
               </section>
             </div>
+
+            {detailBlocks.length > 0 && (
+              <section>
+                <h2 className="text-2xl font-semibold text-county-dark-green">In Depth</h2>
+                <div className="space-y-4">{detailBlocks}</div>
+              </section>
+            )}
 
             <div className="pt-2">
               <Link href="/species" className="rounded-full bg-county-blue px-5 py-2 font-semibold text-white">
