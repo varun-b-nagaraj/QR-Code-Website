@@ -204,7 +204,7 @@ async function identifyPlantWithPlantNet(file: File): Promise<IdentificationResu
 }
 
 function mockFallbackResult(mode: IdentifyMode, error: string): IdentificationResult {
-  const fallbackSpecies = mode === "plant" ? species.find((item) => item.slug === "texas-sage") : species.find((item) => item.slug === "northern-mockingbird");
+  const fallbackSpecies = mode === "plant" ? species.find((item) => item.slug === "escarpment-live-oak") : species.find((item) => item.slug === "northern-mockingbird");
 
   if (!fallbackSpecies) {
     throw new Error(`Unable to build fallback identification result. Provider error: ${error}`);

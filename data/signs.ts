@@ -9,7 +9,7 @@ export const signs: SignStop[] = [
     image: "/images/native-plants-stop.svg",
     educationalText:
       "This station introduces drought-adapted native plants that support birds, pollinators, and healthy soils throughout the year.",
-    featuredSpeciesSlugs: ["texas-sage", "live-oak", "monarch-butterfly"],
+    featuredSpeciesSlugs: ["escarpment-live-oak", "texas-redbud", "texas-bluebonnet"],
   },
 ];
 

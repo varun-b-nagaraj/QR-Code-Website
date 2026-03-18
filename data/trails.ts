@@ -14,8 +14,8 @@ export const trails: Trail[] = [
       "Pollinator meadow learning loop",
     ],
     commonSpeciesSlugs: [
-      "live-oak",
-      "texas-sage",
+      "escarpment-live-oak",
+      "little-bluestem",
       "northern-mockingbird",
       "monarch-butterfly",
     ],

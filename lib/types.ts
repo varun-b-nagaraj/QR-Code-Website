@@ -7,12 +7,21 @@ export type SpeciesCategory =
   | "Trees";
 
 export type NativeStatus = "Native" | "Invasive" | "Unknown";
+export type PlantSubcategory =
+  | "Trees"
+  | "Shrubs"
+  | "Vines"
+  | "Grasses"
+  | "Wildflowers"
+  | "Invasive Watchlist"
+  | "Additional Insights";
 
 export interface Species {
   slug: string;
   commonName: string;
   scientificName: string;
   category: SpeciesCategory;
+  plantSubcategory?: PlantSubcategory;
   nativeStatus: NativeStatus;
   image: string;
   summary: string;
