@@ -2197,6 +2197,71 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "black-crappie": {
+    "inat_taxon_id": 49594,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/441025140/large.jpg",
+    "cover_image_attribution": "\nEric Engbretson, U.S. Fish and Wildlife Service, no known copyright restrictions (public domain)",
+    "cover_image_license": "pd",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/239196242/large.jpeg",
+        "attribution": "(c) Dimitris S, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/358398695/large.jpg",
+        "attribution": "(c) ndherper, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/475912600/large.jpg",
+        "attribution": "(c) vilanophoto, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/383733517/large.jpeg",
+        "attribution": "(c) Quinn, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/601845348/large.jpg",
+        "attribution": "(c) Jackson Quitel, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/587798148/large.jpg",
+        "attribution": "(c) mrjmorris, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/516694904/large.jpg",
+        "attribution": "(c) eleggua, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/171707506/large.jpg",
+        "attribution": "(c) Bettina Harvey, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/178482949/large.jpg",
+        "attribution": "(c) Joe MacIndewar, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/320677549/large.png",
+        "attribution": "(c) cmmteixeira, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/63241458/large.jpeg",
+        "attribution": "(c) Outdoor Expressions, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/60206821/large.jpeg",
+        "attribution": "(c) CJ Campbell, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "black-crested-titmouse": {
     "inat_taxon_id": 13631,
     "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/246488617/large.jpg",
@@ -2999,6 +3064,70 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "blue-catfish": {
+    "inat_taxon_id": 103276,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/13010379/large.jpeg",
+    "cover_image_attribution": "(c) pmk00001, some rights reserved (CC BY-NC), uploaded by pmk00001",
+    "cover_image_license": "cc-by-nc",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/169492079/large.jpg",
+        "attribution": "(c) Brandon Brooke, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/466683789/large.jpg",
+        "attribution": "(c) Jason E. Avery, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/244463549/large.jpg",
+        "attribution": "(c) Cody Cromer, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/393493730/large.jpeg",
+        "attribution": "(c) Miciah McNels, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/14631299/large.jpg",
+        "attribution": "(c) mgbean, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2827826/large.jpg",
+        "attribution": "(c) Roberto R. Calderón, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/35877380/large.jpeg",
+        "attribution": "(c) Jason Naivar, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/25390243/large.jpg",
+        "attribution": "(c) Jorge Bogantes Montero, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/481123025/large.jpeg",
+        "attribution": "(c) Drew, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/185933909/large.jpg",
+        "attribution": "(c) graysontucker, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/18479489/large.jpg",
+        "attribution": "(c) Tucker101, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/385500985/large.jpg",
+        "attribution": "(c) heymadz, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "blue-dasher": {
     "inat_taxon_id": 59774,
     "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/28379940/large.jpg",
@@ -3282,6 +3411,71 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "bluegill-sunfish": {
+    "inat_taxon_id": 49591,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/339074/large.png",
+    "cover_image_attribution": "(c) Kristiina Hurme, some rights reserved (CC BY), uploaded by Kristiina Hurme",
+    "cover_image_license": "cc-by",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/339074/large.png",
+        "attribution": "(c) Kristiina Hurme, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/60943436/large.jpg",
+        "attribution": "(c) Robin, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/181990215/large.jpeg",
+        "attribution": "(c) Cameron Layne, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/170771782/large.jpg",
+        "attribution": "(c) Bryan Ames, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/114774233/large.jpg",
+        "attribution": "(c) Peter Wilson, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/189135779/large.jpg",
+        "attribution": "(c) arachphotobia, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/263212051/large.jpg",
+        "attribution": "(c) Vince Golder, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/96265805/large.jpg",
+        "attribution": "(c) snakehawk163, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/435808200/large.jpeg",
+        "attribution": "(c) Calvin McDowell, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/75348735/large.jpg",
+        "attribution": "(c) averytribbett, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/225715598/large.jpg",
+        "attribution": "(c) jayce-the-creature-creator, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/71305213/large.jpg",
+        "attribution": "no rights reserved",
+        "license": "cc0",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "bobcat": {
     "inat_taxon_id": 41976,
     "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/60028871/large.jpg",
@@ -3373,6 +3567,72 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/262524875/large.jpg",
         "attribution": "(c) Leslie S, some rights reserved (CC BY-NC)",
         "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "bowfin": {
+    "inat_taxon_id": 58611,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/38473528/large.jpg",
+    "cover_image_attribution": "(c) Phil's 1stPix, some rights reserved (CC BY-NC-SA)",
+    "cover_image_license": "cc-by-nc-sa",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/470801818/large.jpg",
+        "attribution": "(c) peter_r, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/55453428/large.jpg",
+        "attribution": "(c) Phil's 1stPix, some rights reserved (CC BY-NC-SA)",
+        "license": "cc-by-nc-sa",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/41757333/large.jpg",
+        "attribution": "(c) Ben Grizzle, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/71576108/large.jpg",
+        "attribution": "(c) Phil's 1stPix, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/270223902/large.jpeg",
+        "attribution": "(c) john_plunket, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/423971184/large.jpeg",
+        "attribution": "(c) Theodor Igor Ottinger, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/59148422/large.jpeg",
+        "attribution": "(c) Michael Keys, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/147695145/large.jpg",
+        "attribution": "(c) Phil's 1stPix, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/243693786/large.jpg",
+        "attribution": "(c) wap0026, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/126407313/large.jpeg",
+        "attribution": "(c) Kerry Cobb, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/470827978/large.jpg",
+        "attribution": "(c) peter_r, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/568641951/large.jpg",
+        "attribution": "(c) jesse russell, all rights reserved",
       },
     ],
     "cover_image_source": "iNaturalist",
@@ -4576,6 +4836,70 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "channel-catfish": {
+    "inat_taxon_id": 81554,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/455557089/large.jpeg",
+    "cover_image_attribution": "(c) Mitchel Buckner, some rights reserved (CC BY-NC), uploaded by Mitchel Buckner",
+    "cover_image_license": "cc-by-nc",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/18681763/large.jpg",
+        "attribution": "(c) gewb, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/216370776/large.jpg",
+        "attribution": "(c) Eric Hicks, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/604718102/large.jpg",
+        "attribution": "(c) Jordan, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/241706507/large.jpeg",
+        "attribution": "(c) Наталья Бондарева, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/595732313/large.jpg",
+        "attribution": "(c) kary, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/56555690/large.jpg",
+        "attribution": "(c) Jeffrey Smith, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/106271990/large.jpeg",
+        "attribution": "(c) Kathy Balman, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/444400205/large.jpeg",
+        "attribution": "(c) patti p., some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/309592705/large.jpeg",
+        "attribution": "(c) akaa, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/582803415/large.jpg",
+        "attribution": "(c) Кураев Михаил, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/455557089/large.jpeg",
+        "attribution": "(c) Mitchel Buckner, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/400952942/large.jpeg",
+        "attribution": "(c) Druv Spruce, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "checkered-gartersnake": {
     "inat_taxon_id": 28390,
     "cover_image_url": "https://static.inaturalist.org/photos/412610622/large.jpg",
@@ -5320,6 +5644,73 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
       {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/375948563/large.jpg",
         "attribution": "(c) Ryan Singer, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "common-carp": {
+    "inat_taxon_id": 53911,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2754663/large.JPG",
+    "cover_image_attribution": "(c) lonnyholmes, some rights reserved (CC BY-NC), uploaded by lonnyholmes",
+    "cover_image_license": "cc-by-nc",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/175650416/large.jpg",
+        "attribution": "(c) Tatiana Svidskaia, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/156268710/large.jpg",
+        "attribution": "(c) Brayden Paulk, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2754663/large.JPG",
+        "attribution": "(c) lonnyholmes, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/384516310/large.jpg",
+        "attribution": "(c) Roderick Hornby, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/58277904/large.jpg",
+        "attribution": "(c) Gianmaria Marchese, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/115776891/large.jpeg",
+        "attribution": "(c) Daniel Wieferich, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/484856767/large.jpg",
+        "attribution": "(c) uconnbirdfish, some rights reserved (CC BY-NC-ND)",
+        "license": "cc-by-nc-nd",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/534172748/large.jpg",
+        "attribution": "(c) Khemthong Tonsakulrungruang, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/279998979/large.jpg",
+        "attribution": "(c) Greg Frie, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/280608519/large.jpeg",
+        "attribution": "(c) dawnborchardt, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/153364436/large.jpeg",
+        "attribution": "(c) Carol Garrison, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/317739750/large.jpg",
+        "attribution": "(c) Kim Falck, some rights reserved (CC BY-NC)",
         "license": "cc-by-nc",
       },
     ],
@@ -8239,6 +8630,137 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "flathead-catfish": {
+    "inat_taxon_id": 81552,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/469085060/large.jpg",
+    "cover_image_attribution": "\nEngbretson, Eric / U.S. Fish and Wildlife Service, no known copyright restrictions (public domain)",
+    "cover_image_license": "pd",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/310512406/large.jpg",
+        "attribution": "(c) ethan_58, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/326694665/large.jpg",
+        "attribution": "(c) ecota55, some rights reserved (CC BY-ND)",
+        "license": "cc-by-nd",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/560630308/large.jpg",
+        "attribution": "(c) Emilio Concari, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/553966789/large.jpg",
+        "attribution": "(c) Logan Hallstrom, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/405141993/large.jpeg",
+        "attribution": "(c) heididewit, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/423640598/large.jpeg",
+        "attribution": "(c) Mark Schwalm, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/564293580/large.jpg",
+        "attribution": "(c) generalfishing, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/9138164/large.jpg",
+        "attribution": "(c) Dan, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/579542275/large.jpg",
+        "attribution": "(c) Owen Reeves, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/213105197/large.jpg",
+        "attribution": "(c) salvelinus, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/419806763/large.jpeg",
+        "attribution": "(c) Jacob Hann, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/603831296/large.jpg",
+        "attribution": "(c) lefua, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "florida-longear-sunfish": {
+    "inat_taxon_id": 104253,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/142674249/large.jpg",
+    "cover_image_attribution": "(c) Koaw Nature, some rights reserved (CC BY-NC), uploaded by Koaw Nature",
+    "cover_image_license": "cc-by-nc",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/44464553/large.jpg",
+        "attribution": "(c) mackelroy, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/57240040/large.jpg",
+        "attribution": "(c) Russ Jones, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/356984392/large.jpeg",
+        "attribution": "(c) jntsestrout, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/210702540/large.jpeg",
+        "attribution": "(c) Aaron Ludwig, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/380271186/large.jpeg",
+        "attribution": "(c) Michi Tobler, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/142674249/large.jpg",
+        "attribution": "(c) Koaw Nature, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/304318080/large.jpeg",
+        "attribution": "(c) Matthew Thompson, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/148526840/large.jpeg",
+        "attribution": "(c) kenopsia, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/94883589/large.jpeg",
+        "attribution": "(c) canders, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/49296108/large.jpg",
+        "attribution": "(c) David Weyers, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/440223626/large.jpeg",
+        "attribution": "(c) los-a, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/573540305/large.jpg",
+        "attribution": "(c) Matthew Kvam, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "frostweed": {
     "inat_taxon_id": 119982,
     "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/13760231/large.jpg",
@@ -8680,6 +9202,72 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
       {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/479721493/large.jpg",
         "attribution": "(c) dontfencemein, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "grass-carp": {
+    "inat_taxon_id": 128500,
+    "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/49052039/large.jpg",
+    "cover_image_attribution": "(c) Phil's 1stPix, some rights reserved (CC BY-NC-SA)",
+    "cover_image_license": "cc-by-nc-sa",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/42925227/large.jpeg",
+        "attribution": "(c) Tyler Bishop, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/303079483/large.jpeg",
+        "attribution": "(c) evgeniq_benihanov, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/601549472/large.jpg",
+        "attribution": "(c) lily, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/466137167/large.jpeg",
+        "attribution": "(c) ethanpeters, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/99140799/large.jpg",
+        "attribution": "(c) Ania Fields, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/391894819/large.jpg",
+        "attribution": "(c) operculum_ben, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/180229821/large.jpg",
+        "attribution": "(c) Michael Kanzlemar, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/305499086/large.jpeg",
+        "attribution": "(c) gfylstra, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/98815941/large.jpg",
+        "attribution": "(c) michbruv127, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/411095484/large.jpeg",
+        "attribution": "(c) Milli Vedder, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/447325387/large.jpeg",
+        "attribution": "(c) devlin61, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/184731326/large.jpg",
+        "attribution": "(c) Steve Purdon, some rights reserved (CC BY-NC)",
         "license": "cc-by-nc",
       },
     ],
@@ -11285,6 +11873,66 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "largemouth-bass": {
+    "inat_taxon_id": 49587,
+    "cover_image_url": "https://static.inaturalist.org/photos/126577823/large.jpg",
+    "cover_image_attribution": "(c) species_spotlight, all rights reserved, uploaded by species_spotlight",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/174714735/large.jpg",
+        "attribution": "(c) Chase Carlson, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/406022805/large.jpg",
+        "attribution": "(c) srichard89, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/593158472/large.jpg",
+        "attribution": "(c) Lynn Marie, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/446565253/large.jpeg",
+        "attribution": "(c) Caleb Sun, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2303709/large.jpg",
+        "attribution": "(c) David Gardner, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/248102992/large.jpg",
+        "attribution": "(c) Nathan Hewitt, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/32290862/large.jpg",
+        "attribution": "(c) tripp_spon, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/596710001/large.jpg",
+        "attribution": "(c) Vladimir Dinets, some rights reserved (CC BY-NC-ND)",
+        "license": "cc-by-nc-nd",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/332780156/large.jpg",
+        "attribution": "(c) Leonardo Merçon, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/333258205/large.jpg",
+        "attribution": "(c) Nick Tobler (Cowturtle), some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/69852091/large.jpeg",
+        "attribution": "(c) Dad is finally uploading observations, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/351606156/large.jpg",
+        "attribution": "(c) Rylan Floto, all rights reserved",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "lesser-goldfinch": {
     "inat_taxon_id": 145308,
     "cover_image_url": "https://static.inaturalist.org/photos/107855775/large.jpg",
@@ -11946,6 +12594,66 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "mexican-mosquitofish": {
+    "inat_taxon_id": 59115,
+    "cover_image_url": "https://static.inaturalist.org/photos/553681986/large.jpg",
+    "cover_image_attribution": "(c) Natthaphat Chotjuckdikul, all rights reserved, uploaded by Natthaphat Chotjuckdikul",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/369172180/large.jpg",
+        "attribution": "(c) Larry Halverson, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/292790061/large.jpeg",
+        "attribution": "(c) Judy W, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/405815553/large.jpeg",
+        "attribution": "(c) Michi Tobler, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/11147317/large.jpg",
+        "attribution": "(c) Justin Garwood, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/553681986/large.jpg",
+        "attribution": "(c) Natthaphat Chotjuckdikul, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/378088681/large.jpg",
+        "attribution": "(c) Christian Louie, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/35365852/large.jpeg",
+        "attribution": "(c) Mason Maron, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/108422181/large.jpg",
+        "attribution": "(c) Steven Wang, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/46463343/large.jpg",
+        "attribution": "(c) Michael Verdirame, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/473914913/large.jpg",
+        "attribution": "(c) Andaman Kaosung, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/448030267/large.jpeg",
+        "attribution": "(c) Craig BroussardL, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/614053787/large.jpg",
+        "attribution": "(c) Greg Predmore, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "mississippi-kite": {
     "inat_taxon_id": 5416,
     "cover_image_url": "https://static.inaturalist.org/photos/344019/large.jpg",
@@ -12322,6 +13030,54 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/352106857/large.jpeg",
         "attribution": "(c) Yifei, some rights reserved (CC BY-NC)",
         "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "neosho-madtom-stonecat": {
+    "inat_taxon_id": 107295,
+    "cover_image_url": "https://static.inaturalist.org/photos/187381745/large.jpeg",
+    "cover_image_attribution": "(c) Michael Tobler, all rights reserved, uploaded by Michael Tobler",
+    "inat_additional_images": [
+      {
+        "url": "https://static.inaturalist.org/photos/309092696/large.jpg",
+        "attribution": "(c) Brandon Brooke, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/309092192/large.jpg",
+        "attribution": "(c) Brandon Brooke, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/122513064/large.jpg",
+        "attribution": "(c) EC, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/187381745/large.jpeg",
+        "attribution": "(c) Michi Tobler, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/276785923/large.jpg",
+        "attribution": "(c) aliciamn, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/277134049/large.jpeg",
+        "attribution": "(c) Andrew George, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/387946862/large.jpeg",
+        "attribution": "(c) Dylan Osterhaus, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/277130677/large.jpeg",
+        "attribution": "(c) Andrew George, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/187396003/large.jpeg",
+        "attribution": "(c) Michi Tobler, all rights reserved",
       },
     ],
     "cover_image_source": "iNaturalist",
@@ -15251,6 +16007,71 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
     ],
     "cover_image_source": "iNaturalist",
   },
+  "rio-grande-cichlid": {
+    "inat_taxon_id": 102649,
+    "cover_image_url": "https://static.inaturalist.org/photos/579921741/large.jpg",
+    "cover_image_attribution": "(c) mattbuckingham, all rights reserved, uploaded by mattbuckingham",
+    "cover_image_license": "cc-by-sa",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/359040163/large.jpeg",
+        "attribution": "(c) Fishes of Texas team, some rights reserved (CC BY-SA)",
+        "license": "cc-by-sa",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/14517107/large.jpg",
+        "attribution": "(c) manny2496, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/579921741/large.jpg",
+        "attribution": "(c) mattbuckingham, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/357338625/large.jpg",
+        "attribution": "(c) taiwan_su, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/70698898/large.jpg",
+        "attribution": "(c) plsommer, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/207282848/large.jpg",
+        "attribution": "(c) embrenhar, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/546489859/large.jpg",
+        "attribution": "(c) ekalisek, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/589920359/large.jpg",
+        "attribution": "(c) Paige Wood, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/662760/large.JPG",
+        "attribution": "(c) Michi Tobler, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/19537991/large.jpg",
+        "attribution": "(c) albarr, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/542242358/large.jpg",
+        "attribution": "(c) Rodrigo, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/505116703/large.jpg",
+        "attribution": "(c) Samuel Cardona Garza, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
   "rio-grande-leopard-frog": {
     "inat_taxon_id": 65975,
     "cover_image_url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2243020/large.jpg",
@@ -16604,6 +17425,70 @@ export const inatSpeciesMediaBySlug: Record<string, InatSpeciesMedia> = {
       {
         "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/57469882/large.jpeg",
         "attribution": "(c) James Holdsworth, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+    ],
+    "cover_image_source": "iNaturalist",
+  },
+  "spotted-gar": {
+    "inat_taxon_id": 104249,
+    "cover_image_url": "https://static.inaturalist.org/photos/569249126/large.jpg",
+    "cover_image_attribution": "(c) Dustin Lynch, all rights reserved, uploaded by Dustin Lynch",
+    "cover_image_license": "cc-by",
+    "inat_additional_images": [
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/2822747/large.JPG",
+        "attribution": "(c) Kristiina Hurme, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/542773225/large.jpg",
+        "attribution": "(c) jbelback, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/66059135/large.jpg",
+        "attribution": "(c) Kevin Gevaert, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/370414612/large.jpg",
+        "attribution": "(c) Thomas Shahan, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/3075070/large.jpg",
+        "attribution": "(c) Mikael Behrens, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/147700129/large.jpg",
+        "attribution": "(c) Wendy McCrady, some rights reserved (CC BY)",
+        "license": "cc-by",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/272569479/large.jpg",
+        "attribution": "(c) Kainoa Lee, all rights reserved",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/381590869/large.jpeg",
+        "attribution": "(c) Jared Davidson, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/147656266/large.jpeg",
+        "attribution": "(c) Aan_an_Adventure, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/490447476/large.jpg",
+        "attribution": "(c) Thomas Shahan, some rights reserved (CC BY-NC)",
+        "license": "cc-by-nc",
+      },
+      {
+        "url": "https://static.inaturalist.org/photos/1627570/large.JPG",
+        "attribution": "(c) Solomon David, all rights reserved",
+      },
+      {
+        "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/16266613/large.jpg",
+        "attribution": "(c) Greg Silva, some rights reserved (CC BY-NC)",
         "license": "cc-by-nc",
       },
     ],

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { InfoCard } from "@/components/InfoCard";
 import { Species, SpeciesCategory } from "@/lib/types";
 
@@ -9,6 +9,7 @@ const categoryFilters: SpeciesCategory[] = [
   "Birds",
   "Mammals",
   "Amphibians",
+  "Fish",
   "Reptiles",
   "Insects",
   "Additional Insights",
@@ -21,6 +22,9 @@ interface SpeciesLibraryClientProps {
 
 function buildCardTag(item: Species): string {
   if (item.category === "Additional Insights") return "Additional Insight";
+  if (item.category === "Birds") {
+    return item.subcategory ? `Bird/${item.subcategory}` : "Bird";
+  }
   const base = item.category === "Plants" ? (item.subcategory === "Trees" ? "Tree" : "Plant") : "Animal";
   if (!item.subcategory) return base;
   if (base === "Tree" && item.subcategory === "Trees") return "Tree";
@@ -38,6 +42,30 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     initialCategory ? new Set([initialCategory]) : new Set(),
   );
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const filtersButtonRef = useRef<HTMLButtonElement | null>(null);
+  const filtersPanelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!filtersOpen) return;
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      if (filtersPanelRef.current?.contains(target)) return;
+      if (filtersButtonRef.current?.contains(target)) return;
+
+      setFiltersOpen(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown, { passive: true });
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [filtersOpen]);
 
   const subcategoriesByCategory = useMemo(() => {
     const map = new Map<SpeciesCategory, string[]>();
@@ -77,6 +105,28 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     return counts;
   }, [items]);
 
+  const subcategoryCountsByCategory = useMemo(() => {
+    const map = new Map<SpeciesCategory, Map<string, number>>();
+
+    for (const category of categoryFilters) {
+      const counts = new Map<string, number>();
+      if (category === "Additional Insights") {
+        map.set(category, counts);
+        continue;
+      }
+
+      for (const item of items) {
+        if (item.category !== category || !item.subcategory) continue;
+        if (item.scientificName === "N/A") continue;
+        counts.set(item.subcategory, (counts.get(item.subcategory) ?? 0) + 1);
+      }
+
+      map.set(category, counts);
+    }
+
+    return map;
+  }, [items]);
+
   const filtered = useMemo(() => {
     return items.filter((item) => {
       const textMatch =
@@ -84,7 +134,9 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
         item.scientificName.toLowerCase().includes(query.toLowerCase());
       const categoryMatch = categories.size === 0 || categories.has(item.category);
       const statusMatch =
-        item.category === "Additional Insights" || statusFilter === "all" || item.nativeStatus === statusFilter;
+        statusFilter === "all"
+          ? true
+          : item.category !== "Additional Insights" && item.nativeStatus === statusFilter;
       const subcategoryMatch =
         selectedSubcategories.size === 0 ||
         item.category === "Additional Insights" ||
@@ -93,6 +145,44 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
       return textMatch && categoryMatch && statusMatch && subcategoryMatch;
     });
   }, [categories, items, query, selectedSubcategories, statusFilter]);
+
+  const toggleCategoryWithSubcategories = (
+    category: SpeciesCategory,
+    subcategories: string[],
+    shouldSelectAll: boolean,
+  ) => {
+    const nextSubcategories = new Set(selectedSubcategories);
+    const nextCategories = new Set(categories);
+
+    if (shouldSelectAll) {
+      for (const value of subcategories) nextSubcategories.add(value);
+      nextCategories.add(category);
+    } else {
+      for (const value of subcategories) nextSubcategories.delete(value);
+      nextCategories.delete(category);
+    }
+
+    setSelectedSubcategories(nextSubcategories);
+    setCategories(nextCategories);
+  };
+
+  const toggleSubcategorySelection = (
+    category: SpeciesCategory,
+    subcategories: string[],
+    value: string,
+  ) => {
+    const nextSubcategories = new Set(selectedSubcategories);
+    if (nextSubcategories.has(value)) nextSubcategories.delete(value);
+    else nextSubcategories.add(value);
+
+    const nextCategories = new Set(categories);
+    const hasAnySelectedInCategory = subcategories.some((item) => nextSubcategories.has(item));
+    if (hasAnySelectedInCategory) nextCategories.add(category);
+    else nextCategories.delete(category);
+
+    setSelectedSubcategories(nextSubcategories);
+    setCategories(nextCategories);
+  };
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
@@ -103,6 +193,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
         </div>
 
         <button
+          ref={filtersButtonRef}
           type="button"
           onClick={() => setFiltersOpen((value) => !value)}
           className="inline-flex items-center rounded-full border border-county-panel bg-county-bg px-4 py-2 text-sm font-semibold text-county-text hover:border-county-green"
@@ -114,37 +205,66 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
       </div>
 
       {filtersOpen && (
-        <div id="species-filters" className="mt-3 rounded-lg bg-county-bg p-4">
+        <div id="species-filters" ref={filtersPanelRef} className="mt-3 rounded-lg bg-county-bg p-4">
           <h2 className="mb-3 text-lg font-semibold text-county-text">Filters</h2>
           <div className="space-y-2">
             {categoryFilters.map((category) => {
-              const checked = categories.has(category);
               const subcategories = subcategoriesByCategory.get(category) || [];
+              const subcategoryCounts = subcategoryCountsByCategory.get(category) ?? new Map<string, number>();
+              const hasSubcategories = subcategories.length > 0;
+              const allSubcategoriesSelected =
+                hasSubcategories && subcategories.every((value) => selectedSubcategories.has(value));
+              const someSubcategoriesSelected =
+                hasSubcategories &&
+                !allSubcategoriesSelected &&
+                subcategories.some((value) => selectedSubcategories.has(value));
+              const checked = hasSubcategories ? allSubcategoriesSelected : categories.has(category);
               const isExpanded = expandedCategories.has(category);
               const selectedCount = subcategories.filter((value) => selectedSubcategories.has(value)).length;
+              const canExpand = hasSubcategories;
+
+              const toggleExpanded = () => {
+                if (!canExpand) return;
+                const next = new Set(expandedCategories);
+                if (next.has(category)) next.delete(category);
+                else next.add(category);
+                setExpandedCategories(next);
+              };
 
               return (
                 <div key={category} className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                        <label className="flex items-center gap-2 text-sm text-county-text">
-                          <input
-                            type="checkbox"
+                  <div
+                    className={`flex items-center justify-between gap-2 rounded px-1 py-1 ${
+                      canExpand ? "cursor-pointer hover:bg-white/40" : ""
+                    }`}
+                    onClick={toggleExpanded}
+                    aria-expanded={canExpand ? isExpanded : undefined}
+                    aria-controls={canExpand ? `subcategory-${category}` : undefined}
+                  >
+                    <div className="flex items-center gap-2 text-sm text-county-text">
+                      <input
+                        type="checkbox"
                         checked={checked}
+                        ref={(node) => {
+                          if (node) node.indeterminate = someSubcategoriesSelected;
+                        }}
                         onChange={() => {
+                          if (hasSubcategories) {
+                            toggleCategoryWithSubcategories(category, subcategories, !checked);
+                            return;
+                          }
+
                           const next = new Set(categories);
                           if (next.has(category)) next.delete(category);
                           else next.add(category);
                           setCategories(next);
-
-                          if (!next.has(category)) {
-                            const nextSubcategories = new Set(selectedSubcategories);
-                            for (const value of subcategories) nextSubcategories.delete(value);
-                            setSelectedSubcategories(nextSubcategories);
-                          }
-                            }}
-                          />
-                          {category} ({categoryCounts.get(category) ?? 0})
-                        </label>
+                        }}
+                        onClick={(event) => event.stopPropagation()}
+                      />
+                      <span>
+                        {category} ({categoryCounts.get(category) ?? 0})
+                      </span>
+                    </div>
 
                     <div className="flex items-center gap-2">
                       {selectedCount > 0 && (
@@ -152,21 +272,10 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
                           {selectedCount}
                         </span>
                       )}
-                      {subcategories.length > 0 && (
-                        <button
-                          type="button"
-                          className="text-sm font-semibold text-county-green"
-                          onClick={() => {
-                            const next = new Set(expandedCategories);
-                            if (next.has(category)) next.delete(category);
-                            else next.add(category);
-                            setExpandedCategories(next);
-                          }}
-                          aria-expanded={isExpanded}
-                          aria-controls={`subcategory-${category}`}
-                        >
+                      {canExpand && (
+                        <span className="text-sm font-semibold text-county-green" aria-hidden>
                           {isExpanded ? "▾" : "▸"}
-                        </button>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -176,25 +285,21 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
                       {subcategories.map((value) => {
                         const isSelected = selectedSubcategories.has(value);
                         return (
-                          <label key={`${category}-${value}`} className="flex items-center gap-2 text-sm text-county-text">
+                          <div
+                            key={`${category}-${value}`}
+                            className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm text-county-text hover:bg-white/40"
+                            onClick={() => toggleSubcategorySelection(category, subcategories, value)}
+                          >
                             <input
                               type="checkbox"
                               checked={isSelected}
-                              onChange={() => {
-                                const next = new Set(selectedSubcategories);
-                                if (next.has(value)) next.delete(value);
-                                else next.add(value);
-                                setSelectedSubcategories(next);
-
-                                if (!categories.has(category)) {
-                                  const nextCategories = new Set(categories);
-                                  nextCategories.add(category);
-                                  setCategories(nextCategories);
-                                }
-                              }}
+                              onChange={() => toggleSubcategorySelection(category, subcategories, value)}
+                              onClick={(event) => event.stopPropagation()}
                             />
-                            {value}
-                          </label>
+                            <span>
+                              {value} ({subcategoryCounts.get(value) ?? 0})
+                            </span>
+                          </div>
                         );
                       })}
                     </div>

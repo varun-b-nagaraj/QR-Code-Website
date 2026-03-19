@@ -37,12 +37,24 @@ Riparian-zone functions (why creeks are biodiversity “magnets”) and the ecos
 
 “Native” means naturally occurring in the region (and broadly in North America, where applicable). “Introduced” is used for species established via human introduction (often urban-adapted).
 
-## Bird profiles
+## Bird Categories and Profiles
+
+### Category index
+
+- Backyard and Songbirds: Northern Cardinal, Blue Jay, American Crow, Great-tailed Grackle, Northern Mockingbird, Carolina Chickadee, Black-crested Titmouse, Carolina Wren, Bewick's Wren, Northern House Wren, Chipping Sparrow, House Finch, Lesser Goldfinch, American Goldfinch, American Robin, Eastern Bluebird, Ruby-crowned Kinglet, Orange-crowned Warbler, Yellow-rumped Warbler, Cedar Waxwing, Downy Woodpecker, Red-bellied Woodpecker, Ladder-backed Woodpecker, Northern Flicker, Mourning Dove, White-winged Dove, Inca Dove, Painted Bunting, Loggerhead Shrike, Red-winged Blackbird, Brown-headed Cowbird, Baltimore Oriole
+- Urban and Introduced Birds: Eurasian Collared-Dove, Rock Pigeon, House Sparrow, European Starling, Monk Parakeet
+- Raptors and Owls: Turkey Vulture, Black Vulture, Red-tailed Hawk, Red-shouldered Hawk, Cooper's Hawk, American Kestrel, Mississippi Kite, Great Horned Owl, Eastern Screech-Owl, Barred Owl, Barn Owl
+- Waterbirds and Waterfowl: Great Blue Heron, Great Egret, Snowy Egret, Green Heron, Double-crested Cormorant, Neotropic Cormorant, Mallard, Blue-winged Teal, Canada Goose, Killdeer
+- Aerial and Fast-Flying Insect Hunters: Black Phoebe, Eastern Phoebe, Scissor-tailed Flycatcher, Great Crested Flycatcher, Eastern Kingbird, Barn Swallow, Cliff Swallow, Purple Martin, Black-chinned Hummingbird, Ruby-throated Hummingbird
+- Conservation-Priority Birds: Golden-cheeked Warbler, Black-capped Vireo
 
 Northern Cardinal  
 *Cardinalis cardinalis*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A bright, crested songbird—males are vivid red, while females are warm brown with red accents; both are common year-round and often seen at feeders and in dense brush. citeturn4view0  
@@ -65,6 +77,9 @@ Blue Jay
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A bold blue-and-white jay with a crest and loud calls; intelligent and often noticed in parks before it is seen. citeturn4view1  
 
@@ -85,6 +100,9 @@ American Crow
 *Corvus brachyrhynchos*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 Large, all-black, highly intelligent bird with hoarse cawing; often seen in family groups and big seasonal roosts. citeturn7view0  
@@ -107,6 +125,9 @@ Great-tailed Grackle
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A large blackbird with long tail (especially in males) and a loud, varied voice; extremely common in Central Texas parking lots and parks. citeturn6view3  
 
@@ -127,6 +148,9 @@ Northern Mockingbird
 *Mimus polyglottos*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A slim gray bird with white wing patches, famous for singing long sequences that can include imitations of other birds and even mechanical sounds. citeturn10view1  
@@ -149,6 +173,9 @@ Carolina Chickadee
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A tiny, energetic black-capped bird with a clear chick-a-dee call; often part of mixed foraging flocks. citeturn4view2  
 
@@ -169,6 +196,9 @@ Black-crested Titmouse
 *Baeolophus atricristatus*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A gray songbird with a pointed crest and pale face; a common Central Texas “backyard woodland” bird with a nasal, talky voice. citeturn4view3  
@@ -191,6 +221,9 @@ Carolina Wren
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A small, cinnamon-brown wren with a bold white eyebrow and a surprisingly loud voice. citeturn10view2  
 
@@ -211,6 +244,9 @@ Bewick’s Wren
 *Thryomanes bewickii*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A slim, long-tailed wren with a bright eyebrow stripe; frequently flicks its tail and sings from exposed perches. citeturn10view3  
@@ -233,6 +269,9 @@ Northern House Wren
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A plain brown wren with an energetic, bubbly song; often zips through shrubs hunting insects. citeturn11view0  
 
@@ -253,6 +292,9 @@ Chipping Sparrow
 *Spizella passerina*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small, neat sparrow; breeding birds often show a crisp rusty cap and a clean, pale eyebrow. citeturn20view2  
@@ -275,6 +317,9 @@ House Finch
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A common feeder bird; males typically show red on head and chest (intensity varies), females are streaky brown. citeturn8view0  
 
@@ -295,6 +340,9 @@ Lesser Goldfinch
 *Spinus psaltria*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small finch that often appears yellow-and-black (males) with quick, undulating flight; common at seed feeders and weedy patches. citeturn8view1  
@@ -317,6 +365,9 @@ American Goldfinch
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A familiar finch that is bright yellow in breeding plumage (males) but duller in winter; often seen at feeders and in open areas with weeds. citeturn8view2  
 
@@ -337,6 +388,9 @@ American Robin
 *Turdus migratorius*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A large thrush with orange underparts; often forages on lawns and is especially noticeable in winter flocks in Central Texas. citeturn8view3  
@@ -359,6 +413,9 @@ Eastern Bluebird
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A bright blue-and-rust thrush that often perches on wires or nest boxes and drops to the ground for insects. citeturn9view0  
 
@@ -379,6 +436,9 @@ Ruby-crowned Kinglet
 *Regulus calendula*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A tiny, hyperactive bird that flicks wings and forages constantly; its ruby crown is often hidden unless excited. citeturn9view2  
@@ -401,6 +461,9 @@ Orange-crowned Warbler
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A small, subtle warbler often seen in winter in the South; the “orange crown” is usually hard to see. citeturn9view3  
 
@@ -421,6 +484,9 @@ Yellow-rumped Warbler
 *Setophaga coronata*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A very common warbler in fall/winter, often flocking in trees and shrubs; look for the namesake yellow rump patch. citeturn10view0  
@@ -443,6 +509,9 @@ Cedar Waxwing
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A sleek, crested bird with a black mask, often moving in flocks; waxwings look “polished” and can appear suddenly when fruit is available. citeturn9view1  
 
@@ -463,6 +532,9 @@ Downy Woodpecker
 *Dryobates pubescens*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small black-and-white woodpecker common in parks and at feeders; often forages acrobatically on small branches. citeturn11view1  
@@ -485,6 +557,9 @@ Red-bellied Woodpecker
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A medium woodpecker with bold black-and-white back bars and red on the head; often vocal and conspicuous along wooded trails. citeturn11view2  
 
@@ -505,6 +580,9 @@ Ladder-backed Woodpecker
 *Dryobates scalaris*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small desert-edge woodpecker with a “laddered” black-and-white back pattern; well-suited to drier, open habitats. citeturn11view3  
@@ -527,6 +605,9 @@ Northern Flicker
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A large brown woodpecker often seen feeding on the ground; flashes bright wing color in flight and shows a white rump patch. citeturn12view0  
 
@@ -547,6 +628,9 @@ Mourning Dove
 *Zenaida macroura*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A slim, long-tailed dove with soft, mournful calls; very common on wires and open ground. citeturn6view0  
@@ -569,6 +653,9 @@ White-winged Dove
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A robust dove with bold white wing patches visible in flight; common in towns and parks in Texas. citeturn6view1  
 
@@ -589,6 +676,9 @@ Inca Dove
 *Columbina inca*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small, scaly-looking dove often seen walking on the ground; common around neighborhoods and feeders in the region. citeturn6view2  
@@ -611,6 +701,9 @@ Eurasian Collared-Dove
 
 Introduced  
 
+Subcategory
+Urban and Introduced Birds  
+
 Description  
 A pale, chunky dove with a black collar on the nape; now common in many U.S. towns and cities. citeturn5view3  
 
@@ -631,6 +724,9 @@ Rock Pigeon
 *Columba livia*  
 
 Introduced  
+
+Subcategory
+Urban and Introduced Birds  
 
 Description  
 The familiar “city pigeon,” highly variable in color due to domestic ancestry; often found in flocks around buildings. citeturn5view2  
@@ -653,6 +749,9 @@ House Sparrow
 
 Introduced  
 
+Subcategory
+Urban and Introduced Birds  
+
 Description  
 A small, stocky sparrow closely tied to human buildings; among the most common birds around houses and commercial areas. citeturn5view0  
 
@@ -673,6 +772,9 @@ European Starling
 *Sturnus vulgaris*  
 
 Introduced  
+
+Subcategory
+Urban and Introduced Birds  
 
 Description  
 A dark, glossy starling with speckling (especially outside breeding season); often forms loud flocks. citeturn5view1  
@@ -695,6 +797,9 @@ Monk Parakeet
 
 Introduced  
 
+Subcategory
+Urban and Introduced Birds  
+
 Description  
 A noisy green-and-gray parakeet that can occur in U.S. cities after pet-trade escapes; known for large communal stick nests. citeturn27view0  
 
@@ -715,6 +820,9 @@ Turkey Vulture
 *Cathartes aura*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A large soaring bird with long wings and a small red (adult) head; often seen circling high on thermals. citeturn12view1  
@@ -737,6 +845,9 @@ Black Vulture
 
 Native  
 
+Subcategory
+Raptors and Owls  
+
 Description  
 A shorter-tailed, darker vulture with quick, stronger wingbeats than a Turkey Vulture; often seen in groups. citeturn12view2  
 
@@ -757,6 +868,9 @@ Red-tailed Hawk
 *Buteo jamaicensis*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A broad-winged soaring hawk common along roads and in open country; adults often show a reddish tail from below. citeturn12view3  
@@ -779,6 +893,9 @@ Red-shouldered Hawk
 
 Native  
 
+Subcategory
+Raptors and Owls  
+
 Description  
 A forest-and-water hawk with rich rufous barring and a distinctive whistled call; often associated with riparian woods. citeturn13view0  
 
@@ -799,6 +916,9 @@ Cooper’s Hawk
 *Accipiter cooperii*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A swift woodland hawk built for maneuvering through trees; commonly hunts birds and is increasingly familiar in neighborhoods. citeturn13view1  
@@ -821,6 +941,9 @@ American Kestrel
 
 Native  
 
+Subcategory
+Raptors and Owls  
+
 Description  
 A small falcon with rufous back and bold facial stripes; often hovers or perches on wires scanning for prey. citeturn13view2  
 
@@ -841,6 +964,9 @@ Mississippi Kite
 *Ictinia mississippiensis*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A graceful summer raptor with smooth flight and pointed wings; often seen catching insects in midair. citeturn13view3  
@@ -863,6 +989,9 @@ Great Horned Owl
 
 Native  
 
+Subcategory
+Raptors and Owls  
+
 Description  
 A powerful owl with ear-like tufts and deep hoots; a versatile predator found in many habitat types, including cities. citeturn14view0  
 
@@ -883,6 +1012,9 @@ Eastern Screech-Owl
 *Megascops asio*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A small owl that can be superbly camouflaged against bark; comes in gray or reddish color morphs. citeturn14view1  
@@ -905,6 +1037,9 @@ Barred Owl
 
 Native  
 
+Subcategory
+Raptors and Owls  
+
 Description  
 A medium-to-large owl with strong horizontal barring and a classic “who-cooks-for-you” call; often associated with mature woods. citeturn14view2  
 
@@ -925,6 +1060,9 @@ Barn Owl
 *Tyto alba*  
 
 Native  
+
+Subcategory
+Raptors and Owls  
 
 Description  
 A pale owl with a heart-shaped face; often hunts over open fields and can occur near farms and open parklands. citeturn14view3  
@@ -947,6 +1085,9 @@ Great Blue Heron
 
 Native  
 
+Subcategory
+Waterbirds and Waterfowl  
+
 Description  
 A tall, blue-gray heron seen standing motionless at water’s edges; strikes quickly to catch fish and other prey. citeturn18view0  
 
@@ -967,6 +1108,9 @@ Great Egret
 *Ardea alba*  
 
 Native  
+
+Subcategory
+Waterbirds and Waterfowl  
 
 Description  
 A large, bright white egret with a long neck and dagger bill; often stalks shallow water deliberately. citeturn18view1  
@@ -989,6 +1133,9 @@ Snowy Egret
 
 Native  
 
+Subcategory
+Waterbirds and Waterfowl  
+
 Description  
 A smaller white egret known for active feeding—quick steps, sudden dashes, and foot-stirring to flush prey. citeturn18view2  
 
@@ -1009,6 +1156,9 @@ Green Heron
 *Butorides virescens*  
 
 Native  
+
+Subcategory
+Waterbirds and Waterfowl  
 
 Description  
 A small, stocky heron often seen hunched at the water’s edge; more secretive than the big herons. citeturn18view3  
@@ -1031,6 +1181,9 @@ Double-crested Cormorant
 
 Native  
 
+Subcategory
+Waterbirds and Waterfowl  
+
 Description  
 A dark, robust diving bird often seen perched with wings spread to dry; common on lakes and large ponds. citeturn19view0  
 
@@ -1051,6 +1204,9 @@ Neotropic Cormorant
 *Nannopterum brasilianum*  
 
 Native  
+
+Subcategory
+Waterbirds and Waterfowl  
 
 Description  
 A slimmer cormorant often seen in warm regions; can occur on inland waters and is increasingly noted in parts of Texas. citeturn19view1  
@@ -1073,6 +1229,9 @@ Mallard
 
 Native  
 
+Subcategory
+Waterbirds and Waterfowl  
+
 Description  
 The classic dabbling duck; males have green heads in breeding season, females are mottled brown. citeturn19view2  
 
@@ -1093,6 +1252,9 @@ Blue-winged Teal
 *Spatula discors*  
 
 Native  
+
+Subcategory
+Waterbirds and Waterfowl  
 
 Description  
 A small dabbling duck; often abundant during migration and wintering periods, especially where shallow wetlands exist. citeturn19view3  
@@ -1115,6 +1277,9 @@ Canada Goose
 
 Native  
 
+Subcategory
+Waterbirds and Waterfowl  
+
 Description  
 Large goose with black head/neck and white cheek patch; common on lawns and ponds and often forms resident park populations. citeturn20view1  
 
@@ -1135,6 +1300,9 @@ Killdeer
 *Charadrius vociferus*  
 
 Native  
+
+Subcategory
+Waterbirds and Waterfowl  
 
 Description  
 A plover that lives far from beaches; runs in spurts across lawns and gravel while calling “kill-deer” loudly. citeturn20view0  
@@ -1157,6 +1325,9 @@ Black Phoebe
 
 Native  
 
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
+
 Description  
 A black-and-white flycatcher that often pumps its tail and perches near water, darting out to snap insects in midair. citeturn15view2  
 
@@ -1177,6 +1348,9 @@ Eastern Phoebe
 *Sayornis phoebe*  
 
 Native  
+
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
 
 Description  
 A plain gray-brown flycatcher that often wags its tail; commonly associated with human structures and edges, especially in cooler months in many areas. citeturn15view3  
@@ -1199,6 +1373,9 @@ Scissor-tailed Flycatcher
 
 Native  
 
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
+
 Description  
 A pale gray flycatcher with salmon-pink wash and an extremely long forked tail; often perched conspicuously on wires and fences in warm seasons. citeturn16view0  
 
@@ -1219,6 +1396,9 @@ Great Crested Flycatcher
 *Myiarchus crinitus*  
 
 Native  
+
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
 
 Description  
 A medium flycatcher with a crested head, lemon-yellow belly, and loud calls; often stays high in trees. citeturn16view1  
@@ -1241,6 +1421,9 @@ Eastern Kingbird
 
 Native  
 
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
+
 Description  
 A black-and-white flycatcher with a sharp, assertive style; often sallies out to catch insects and can be aggressive in territorial defense. citeturn16view2  
 
@@ -1261,6 +1444,9 @@ Barn Swallow
 *Hirundo rustica*  
 
 Native  
+
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
 
 Description  
 A streamlined swallow with a deeply forked tail; often seen sweeping low over water and fields catching insects. citeturn16view3  
@@ -1283,6 +1469,9 @@ Cliff Swallow
 
 Native  
 
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
+
 Description  
 A social swallow that builds gourd-shaped mud nests in colonies under bridges and overhangs. citeturn17view0  
 
@@ -1303,6 +1492,9 @@ Purple Martin
 *Progne subis*  
 
 Native  
+
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
 
 Description  
 The largest North American swallow; graceful flier that feeds on insects high above open areas and water. citeturn17view1  
@@ -1325,6 +1517,9 @@ Black-chinned Hummingbird
 
 Native  
 
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
+
 Description  
 A small green-backed hummingbird; the male’s dark throat can flash a thin purple band in the right light. citeturn15view0  
 
@@ -1345,6 +1540,9 @@ Ruby-throated Hummingbird
 *Archilochus colubris*  
 
 Native  
+
+Subcategory
+Aerial and Fast-Flying Insect Hunters  
 
 Description  
 A classic eastern hummingbird; males show a brilliant ruby throat in good light, and both sexes visit flowers and feeders. citeturn15view1  
@@ -1367,6 +1565,9 @@ Painted Bunting
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A spectacularly colorful songbird (males show blue head, red underparts, green back); often shy and more often heard than seen. citeturn17view2  
 
@@ -1387,6 +1588,9 @@ Loggerhead Shrike
 *Lanius ludovicianus*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A gray-and-white bird with a black mask; hunts like a raptor but perches like a songbird, often scanning from wires. citeturn20view3  
@@ -1409,6 +1613,9 @@ Red-winged Blackbird
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A marsh-and-field blackbird; males show red-and-yellow shoulder patches and often sing from cattails or fence posts. citeturn7view1  
 
@@ -1429,6 +1636,9 @@ Brown-headed Cowbird
 *Molothrus ater*  
 
 Native  
+
+Subcategory
+Backyard and Songbirds  
 
 Description  
 A small blackbird; males show a brown head and glossy black body; notorious for brood parasitism (laying eggs in other birds’ nests). citeturn7view2turn25view2  
@@ -1451,6 +1661,9 @@ Baltimore Oriole
 
 Native  
 
+Subcategory
+Backyard and Songbirds  
+
 Description  
 A bright orange-and-black songbird (males especially vivid); often a spring/summer presence in trees and edges. citeturn7view3  
 
@@ -1472,6 +1685,9 @@ Golden-cheeked Warbler
 
 Native  
 
+Subcategory
+Conservation-Priority Birds  
+
 Description  
 A striking black-and-gold warbler that breeds only in Texas Hill Country habitats; one of the region’s signature conservation birds. citeturn23view0turn25view1  
 
@@ -1492,6 +1708,9 @@ Black-capped Vireo
 *Vireo atricapilla*  
 
 Native  
+
+Subcategory
+Conservation-Priority Birds  
 
 Description  
 A small migratory songbird with a contrasting dark cap (males) and bright “spectacles”; historically central to Hill Country conservation efforts. citeturn25view2turn23view1  

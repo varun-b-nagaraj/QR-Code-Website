@@ -3,6 +3,7 @@ export type SpeciesCategory =
   | "Birds"
   | "Mammals"
   | "Amphibians"
+  | "Fish"
   | "Reptiles"
   | "Insects"
   | "Additional Insights";
