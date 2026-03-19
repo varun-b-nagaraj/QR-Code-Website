@@ -167,6 +167,39 @@ async function fetchObservationPhoto({ taxonId, scientificName }) {
   return null;
 }
 
+async function fetchObservationGallery({ taxonId, scientificName, limit = 6 }) {
+  const params = new URLSearchParams({
+    photos: "true",
+    quality_grade: "research",
+    per_page: "30",
+    order_by: "votes",
+    order: "desc",
+  });
+
+  if (taxonId) params.set("taxon_id", String(taxonId));
+  else params.set("taxon_name", scientificName);
+
+  const url = `${OBS_URL}?${params.toString()}`;
+  const json = await requestJson(url);
+  const observations = json?.results || [];
+  const gallery = [];
+  const seen = new Set();
+
+  for (const observation of observations) {
+    if (gallery.length >= limit) break;
+    const photo = photoFromObservation(observation);
+    if (!photo?.url || seen.has(photo.url)) continue;
+    seen.add(photo.url);
+    gallery.push({
+      url: photo.url,
+      attribution: photo.attribution || "",
+      license: photo.license || "",
+    });
+  }
+
+  return gallery;
+}
+
 function toOutputFileContent(mapping) {
   const lines = [];
   lines.push('export type InatSpeciesMedia = {');
@@ -174,6 +207,11 @@ function toOutputFileContent(mapping) {
   lines.push("  cover_image_url?: string;");
   lines.push("  cover_image_attribution?: string;");
   lines.push("  cover_image_license?: string;");
+  lines.push("  inat_additional_images?: Array<{");
+  lines.push("    url: string;");
+  lines.push("    attribution?: string;");
+  lines.push("    license?: string;");
+  lines.push("  }>;");
   lines.push('  cover_image_source?: "iNaturalist";');
   lines.push("};");
   lines.push("");
@@ -187,6 +225,17 @@ function toOutputFileContent(mapping) {
     if (media.cover_image_url) lines.push(`    "cover_image_url": ${JSON.stringify(media.cover_image_url)},`);
     if (media.cover_image_attribution) lines.push(`    "cover_image_attribution": ${JSON.stringify(media.cover_image_attribution)},`);
     if (media.cover_image_license) lines.push(`    "cover_image_license": ${JSON.stringify(media.cover_image_license)},`);
+    if (media.inat_additional_images?.length) {
+      lines.push('    "inat_additional_images": [');
+      for (const image of media.inat_additional_images) {
+        lines.push("      {");
+        lines.push(`        "url": ${JSON.stringify(image.url)},`);
+        if (image.attribution) lines.push(`        "attribution": ${JSON.stringify(image.attribution)},`);
+        if (image.license) lines.push(`        "license": ${JSON.stringify(image.license)},`);
+        lines.push("      },");
+      }
+      lines.push("    ],");
+    }
     lines.push('    "cover_image_source": "iNaturalist",');
     lines.push("  },");
   }
@@ -245,6 +294,11 @@ async function main() {
         cover_image_url: photo.url,
         cover_image_attribution: photo.attribution || "",
         cover_image_license: photo.license || "",
+        inat_additional_images: (await fetchObservationGallery({
+          taxonId: taxon.id,
+          scientificName: item.scientificName,
+          limit: 6,
+        })).filter((galleryImage) => galleryImage.url !== photo.url),
       };
 
       console.log("  - image ok");

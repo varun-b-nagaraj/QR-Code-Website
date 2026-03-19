@@ -118,6 +118,21 @@ export default async function SpeciesDetailPage({
     { title: "Ecological Role", value: item.ecologicalRole },
     { title: "Fun Fact", value: item.funFact },
   ].filter((section) => section.value.trim());
+  const descriptionSection = sections.find((section) => section.title === "Description");
+  const remainingSections = sections.filter((section) => section.title !== "Description");
+  const additionalImages = (item.inat_additional_images || []).slice(0, 6);
+  const leftStack = additionalImages.filter((_, index) => index % 2 === 0);
+  const rightStack = additionalImages.filter((_, index) => index % 2 === 1);
+  const leftCollageLayouts = [
+    { width: 208, height: 126, y: -180, rotation: -7, z: 14 },
+    { width: 176, height: 222, y: -18, rotation: 4, z: 12 },
+    { width: 224, height: 142, y: 170, rotation: -3, z: 16 },
+  ];
+  const rightCollageLayouts = [
+    { width: 202, height: 122, y: -176, rotation: 6, z: 14 },
+    { width: 174, height: 224, y: -10, rotation: -4, z: 12 },
+    { width: 216, height: 138, y: 172, rotation: 3, z: 16 },
+  ];
 
   if (insight) {
     const detailBlocks =
@@ -193,8 +208,8 @@ export default async function SpeciesDetailPage({
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <article className="overflow-hidden rounded-2xl bg-white shadow-sm">
-        <div className="relative h-72 w-full sm:h-80">
+      <article className="relative overflow-visible rounded-2xl bg-white shadow-sm">
+        <div className="relative h-72 w-full overflow-hidden rounded-t-2xl sm:h-80">
           <Image
             src={item.image}
             alt={`${item.commonName} (${item.scientificName})`}
@@ -217,8 +232,85 @@ export default async function SpeciesDetailPage({
               {item.cover_image_license ? ` • License: ${item.cover_image_license}` : ""}
             </p>
           )}
+          {descriptionSection && (
+            <section className="relative space-y-4">
+              <h2 className="text-2xl font-semibold text-county-dark-green">{descriptionSection.title}</h2>
 
-          {sections.map((section) => (
+              {additionalImages.length > 1 ? (
+                <div className="relative">
+                  <div className="absolute inset-0 hidden xl:block">
+                    {leftStack.map((image, index) => {
+                      const layout = leftCollageLayouts[index % leftCollageLayouts.length];
+                      return (
+                        <div
+                          key={`${image.url}-left-${index}`}
+                          className="group absolute overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-50 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-2xl hover:shadow-black/35"
+                          style={{
+                            width: `${layout.width}px`,
+                            height: `${layout.height}px`,
+                            left: `calc(-1 * clamp(260px, 18vw, 360px))`,
+                            top: `calc(50% + ${layout.y}px)`,
+                            rotate: `${layout.rotation}deg`,
+                            zIndex: layout.z,
+                          }}
+                        >
+                          <Image
+                            src={image.url}
+                            alt={`${item.commonName} additional iNaturalist photo ${index + 1}`}
+                            fill
+                            className="object-cover"
+                          />
+                          {(image.attribution || image.license) && (
+                            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                              <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
+                              {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {rightStack.map((image, index) => {
+                      const layout = rightCollageLayouts[index % rightCollageLayouts.length];
+                      return (
+                        <div
+                          key={`${image.url}-right-${index}`}
+                          className="group absolute overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-50 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-2xl hover:shadow-black/35"
+                          style={{
+                            width: `${layout.width}px`,
+                            height: `${layout.height}px`,
+                            right: `calc(-1 * clamp(260px, 18vw, 360px))`,
+                            top: `calc(50% + ${layout.y}px)`,
+                            rotate: `${layout.rotation}deg`,
+                            zIndex: layout.z,
+                          }}
+                        >
+                          <Image
+                            src={image.url}
+                            alt={`${item.commonName} additional iNaturalist photo ${leftStack.length + index + 1}`}
+                            fill
+                            className="object-cover"
+                          />
+                          {(image.attribution || image.license) && (
+                            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                              <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
+                              {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="relative z-20">{renderTextBlock(descriptionSection.value)}</div>
+                </div>
+              ) : (
+                renderTextBlock(descriptionSection.value)
+              )}
+            </section>
+          )}
+
+          {remainingSections.map((section) => (
             <section key={section.title}>
               <h2 className="text-2xl font-semibold text-county-dark-green">{section.title}</h2>
               {renderTextBlock(section.value)}

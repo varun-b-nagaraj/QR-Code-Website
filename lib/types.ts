@@ -26,6 +26,11 @@ export interface Species {
   cover_image_url?: string;
   cover_image_attribution?: string;
   cover_image_license?: string;
+  inat_additional_images?: Array<{
+    url: string;
+    attribution?: string;
+    license?: string;
+  }>;
   cover_image_source?: "iNaturalist";
 }
 
