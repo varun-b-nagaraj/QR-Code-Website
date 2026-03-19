@@ -1,12 +1,12 @@
 import { CardGrid } from "@/components/CardGrid";
 import { ContactPanel } from "@/components/ContactPanel";
 import { HeroSearch } from "@/components/HeroSearch";
-import aboutImage from "@/public/images/about.png";
-import conservationImage from "@/public/images/conservation.png";
-import historyImage from "@/public/images/history.png";
-import identifyImage from "@/public/images/identify.png";
-import mapImage from "@/public/images/map.png";
-import nativeImage from "@/public/images/native.png";
+import aboutImage from "@/public/landing-page/about.jpeg";
+import conservationImage from "@/public/landing-page/conservation.jpeg";
+import historyImage from "@/public/landing-page/history.png";
+import identifyImage from "@/public/landing-page/identify-plants-and-wildlife.jpeg";
+import mapImage from "@/public/landing-page/trail-map.png";
+import nativeImage from "@/public/landing-page/native-species-library.jpeg";
 
 const cardItems = [
   {
