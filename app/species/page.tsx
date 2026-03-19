@@ -6,6 +6,7 @@ const validCategories = new Set<SpeciesCategory>([
   "Plants",
   "Birds",
   "Mammals",
+  "Amphibians",
   "Reptiles",
   "Insects",
   "Additional Insights",

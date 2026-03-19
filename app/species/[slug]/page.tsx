@@ -229,7 +229,7 @@ export default async function SpeciesDetailPage({
             <div className="pt-2">
               <Link
                 href="/species"
-                className="inline-flex items-center rounded-full bg-county-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-county-dark-green"
+                className="inline-flex items-center rounded-full bg-county-dark-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-[#3f6f2f]"
               >
                 Back to Species Library
               </Link>
@@ -284,7 +284,7 @@ export default async function SpeciesDetailPage({
           <div className="pt-2">
             <Link
               href="/species"
-              className="inline-flex items-center rounded-full bg-county-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-county-dark-green"
+              className="inline-flex items-center rounded-full bg-county-dark-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-[#3f6f2f]"
             >
               Back to Species Library
             </Link>
