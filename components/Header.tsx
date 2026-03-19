@@ -5,18 +5,13 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const primaryNavItems = [
-  { label: "County Parks & Trails", href: "/" },
+  { label: "Conservation Info", href: "/conservation-information" },
   { label: "Trail Map", href: "/trails/champion-park-trail" },
-  { label: "Native Plants", href: "/species?category=Plants" },
-  { label: "Wildlife", href: "/species?category=Birds" },
+  { label: "Nature Library", href: "/species" },
   { label: "Park History", href: "/park-history" },
 ];
 
-const moreInfoItems = [
-  { label: "Nature Library", href: "/species" },
-  { label: "About", href: "/about" },
-  { label: "Identify", href: "/ai" },
-];
+const aboutNavItem = { label: "About", href: "/about" };
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -50,30 +45,16 @@ export function Header() {
               </Link>
             );
           })}
-          <div className="group relative ml-1">
-            <button
-              type="button"
-              className="cursor-pointer whitespace-nowrap rounded-md px-2 py-2 text-sm font-semibold text-county-blue transition-colors hover:text-county-green"
-            >
-              More Info
-            </button>
-            <div className="invisible absolute left-0 top-10 z-40 w-52 translate-y-1 rounded-lg border border-county-panel bg-white p-2 opacity-0 shadow-md transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-              {moreInfoItems.map((item) => {
-                const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href.split("?")[0]));
-                return (
-                  <Link
-                    key={`${item.label}-${item.href}`}
-                    href={item.href}
-                    className={`block rounded px-3 py-2 text-sm font-semibold ${
-                      active ? "bg-county-panel text-county-green" : "text-county-blue hover:bg-county-panel hover:text-county-green"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
+          <Link
+            href={aboutNavItem.href}
+            className={`whitespace-nowrap rounded-md px-2 py-2 text-sm font-semibold transition-colors ${
+              pathname === aboutNavItem.href || pathname.startsWith(`${aboutNavItem.href}/`)
+                ? "text-county-green"
+                : "text-county-blue hover:text-county-green"
+            }`}
+          >
+            {aboutNavItem.label}
+          </Link>
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 lg:flex">
@@ -122,7 +103,7 @@ export function Header() {
       {open && (
         <nav className="border-t border-county-panel bg-county-white px-4 py-3 lg:hidden" aria-label="Mobile Primary">
           <ul className="space-y-1">
-            {[...primaryNavItems, ...moreInfoItems, { label: "AI Assistant", href: "/ai" }].map((item) => {
+            {[...primaryNavItems, aboutNavItem, { label: "AI Assistant", href: "/ai" }].map((item) => {
               const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href.split("?")[0]));
               return (
                 <li key={`${item.label}-${item.href}`}>
