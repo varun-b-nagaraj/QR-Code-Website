@@ -1,5 +1,4 @@
 import { CardGrid } from "@/components/CardGrid";
-import { ContactPanel } from "@/components/ContactPanel";
 import { HeroSearch } from "@/components/HeroSearch";
 import aboutImage from "@/public/landing-page/about.jpeg";
 import conservationImage from "@/public/landing-page/conservation.jpeg";
@@ -58,17 +57,13 @@ export default function Home() {
 
       <section className="relative z-10 mx-auto -mt-10 w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[1fr,280px]">
-            <section>
-              <p className="text-sm text-county-text-secondary">Home › Departments › Parks</p>
-              <h1 className="mt-2 text-4xl font-semibold text-county-green">Educational Trail Experience</h1>
-              <div className="mt-5">
-                <CardGrid items={cardItems} />
-              </div>
-            </section>
-
-            <ContactPanel />
-          </div>
+          <section>
+            <p className="text-sm text-county-text-secondary">Home › Departments › Parks</p>
+            <h1 className="mt-2 text-4xl font-semibold text-county-green">Educational Trail Experience</h1>
+            <div className="mt-5">
+              <CardGrid items={cardItems} />
+            </div>
+          </section>
         </div>
       </section>
     </main>
