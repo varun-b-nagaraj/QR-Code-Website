@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <main>
       <HeroSearch
-        imageSrc="/images/hero-park.svg"
+        imageSrc="/brushy-creek-lake-park.jpeg"
         title="Educational Trail Experience"
         placeholder="Search plants, animals, trails, or park info..."
       />
