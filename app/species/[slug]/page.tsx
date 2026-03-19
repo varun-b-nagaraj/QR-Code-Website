@@ -75,11 +75,11 @@ function renderTextBlock(text: string, className = "mt-1 text-county-text") {
 }
 
 function isInsight(item: Species) {
-  return item.subcategory === "Additional Insights" || item.scientificName === "N/A";
+  return item.category === "Additional Insights" || item.scientificName === "N/A";
 }
 
 function getInsightSupportCopy(item: Species) {
-  if (item.category === "Plants") {
+  if (item.slug.startsWith("plant-insight-")) {
     return {
       title: "Why this matters on the trail",
       body:
@@ -120,19 +120,49 @@ export default async function SpeciesDetailPage({
   ].filter((section) => section.value.trim());
   const descriptionSection = sections.find((section) => section.title === "Description");
   const remainingSections = sections.filter((section) => section.title !== "Description");
-  const additionalImages = (item.inat_additional_images || []).slice(0, 6);
-  const leftStack = additionalImages.filter((_, index) => index % 2 === 0);
-  const rightStack = additionalImages.filter((_, index) => index % 2 === 1);
-  const leftCollageLayouts = [
-    { width: 208, height: 126, y: -180, rotation: -7, z: 14 },
-    { width: 176, height: 222, y: -18, rotation: 4, z: 12 },
-    { width: 224, height: 142, y: 170, rotation: -3, z: 16 },
+  const additionalImages = item.inat_additional_images || [];
+  const additionalWithoutCover = item.cover_image_url
+    ? additionalImages.filter((image) => image.url !== item.cover_image_url)
+    : additionalImages;
+  const collagePool = [
+    ...additionalWithoutCover,
+    ...(item.cover_image_url
+      ? [{
+          url: item.cover_image_url,
+          attribution: item.cover_image_attribution || "",
+          license: item.cover_image_license || "",
+        }]
+      : []),
   ];
-  const rightCollageLayouts = [
-    { width: 202, height: 122, y: -176, rotation: 6, z: 14 },
-    { width: 174, height: 224, y: -10, rotation: -4, z: 12 },
-    { width: 216, height: 138, y: 172, rotation: 3, z: 16 },
+  const collageTargetCount = Math.min(12, Math.max(6, collagePool.length));
+  const collageImages =
+    collagePool.length > 0
+      ? Array.from({ length: collageTargetCount }, (_, index) => collagePool[index % collagePool.length])
+      : [];
+  const leftStack = collageImages.filter((_, index) => index % 2 === 0);
+  const rightStack = collageImages.filter((_, index) => index % 2 === 1);
+  const sizeCycle = [
+    { width: 92, height: 74 },
+    { width: 132, height: 94 },
+    { width: 116, height: 162 },
+    { width: 166, height: 108 },
+    { width: 144, height: 196 },
+    { width: 208, height: 130 },
+    { width: 124, height: 228 },
+    { width: 248, height: 154 },
+    { width: 178, height: 264 },
+    { width: 286, height: 182 },
   ];
+  const rotationCycleLeft = [-14, 9, -7, 12, -10, 6];
+  const rotationCycleRight = [13, -8, 7, -12, 10, -6];
+  const leftInsetCycle = [0, 84, 32, 116, 52, 92];
+  const rightInsetCycle = [0, 80, 30, 110, 48, 88];
+  const yJitterCycle = [-28, 14, -10, 24, -18, 8];
+  const visibleAtIndexClass = (index: number) => {
+    if (index < 4) return "hidden xl:block";
+    if (index < 6) return "hidden 2xl:block";
+    return "hidden min-[1800px]:block";
+  };
 
   if (insight) {
     const detailBlocks =
@@ -140,6 +170,7 @@ export default async function SpeciesDetailPage({
         ? []
         : renderTextBlock(item.description, "mt-3 text-county-text leading-7");
     const supportCopy = getInsightSupportCopy(item);
+    const insightLabel = item.category === "Additional Insights" ? "Library Insight" : `${item.category} Insight`;
 
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -147,7 +178,7 @@ export default async function SpeciesDetailPage({
           <div className="grid gap-6 bg-county-bg p-6 sm:p-8 md:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] md:items-center">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-county-text-secondary">
-                {item.category} Insight
+                {insightLabel}
               </p>
               <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight text-county-dark-green sm:text-5xl">
                 {item.commonName}
@@ -196,7 +227,10 @@ export default async function SpeciesDetailPage({
             )}
 
             <div className="pt-2">
-              <Link href="/species" className="rounded-full bg-county-blue px-5 py-2 font-semibold text-white">
+              <Link
+                href="/species"
+                className="inline-flex items-center rounded-full bg-county-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-county-dark-green"
+              >
                 Back to Species Library
               </Link>
             </div>
@@ -219,7 +253,7 @@ export default async function SpeciesDetailPage({
           />
         </div>
 
-        <div className="space-y-5 p-6 sm:p-8">
+        <div className="relative z-20 space-y-5 bg-white p-6 sm:p-8">
           <p className="text-sm text-county-text-secondary">Species Library</p>
           <h1 className="text-4xl font-semibold text-county-green">{item.commonName}</h1>
           <p className="text-lg italic text-county-text-secondary">{item.scientificName}</p>
@@ -236,77 +270,7 @@ export default async function SpeciesDetailPage({
             <section className="relative space-y-4">
               <h2 className="text-2xl font-semibold text-county-dark-green">{descriptionSection.title}</h2>
 
-              {additionalImages.length > 1 ? (
-                <div className="relative">
-                  <div className="absolute inset-0 hidden xl:block">
-                    {leftStack.map((image, index) => {
-                      const layout = leftCollageLayouts[index % leftCollageLayouts.length];
-                      return (
-                        <div
-                          key={`${image.url}-left-${index}`}
-                          className="group absolute overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-50 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-2xl hover:shadow-black/35"
-                          style={{
-                            width: `${layout.width}px`,
-                            height: `${layout.height}px`,
-                            left: `calc(-1 * clamp(260px, 18vw, 360px))`,
-                            top: `calc(50% + ${layout.y}px)`,
-                            rotate: `${layout.rotation}deg`,
-                            zIndex: layout.z,
-                          }}
-                        >
-                          <Image
-                            src={image.url}
-                            alt={`${item.commonName} additional iNaturalist photo ${index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                          {(image.attribution || image.license) && (
-                            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                              <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
-                              {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-
-                    {rightStack.map((image, index) => {
-                      const layout = rightCollageLayouts[index % rightCollageLayouts.length];
-                      return (
-                        <div
-                          key={`${image.url}-right-${index}`}
-                          className="group absolute overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-50 hover:-translate-y-1 hover:scale-[1.025] hover:shadow-2xl hover:shadow-black/35"
-                          style={{
-                            width: `${layout.width}px`,
-                            height: `${layout.height}px`,
-                            right: `calc(-1 * clamp(260px, 18vw, 360px))`,
-                            top: `calc(50% + ${layout.y}px)`,
-                            rotate: `${layout.rotation}deg`,
-                            zIndex: layout.z,
-                          }}
-                        >
-                          <Image
-                            src={image.url}
-                            alt={`${item.commonName} additional iNaturalist photo ${leftStack.length + index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                          {(image.attribution || image.license) && (
-                            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                              <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
-                              {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="relative z-20">{renderTextBlock(descriptionSection.value)}</div>
-                </div>
-              ) : (
-                renderTextBlock(descriptionSection.value)
-              )}
+              {renderTextBlock(descriptionSection.value)}
             </section>
           )}
 
@@ -318,11 +282,116 @@ export default async function SpeciesDetailPage({
           ))}
 
           <div className="pt-2">
-            <Link href="/species" className="rounded-full bg-county-blue px-5 py-2 font-semibold text-white">
+            <Link
+              href="/species"
+              className="inline-flex items-center rounded-full bg-county-green px-5 py-2 font-semibold text-white transition-colors duration-200 hover:bg-county-dark-green"
+            >
               Back to Species Library
             </Link>
           </div>
         </div>
+
+        {collageImages.length > 3 && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden xl:block">
+            {leftStack.map((image, index) => {
+              const topPercent = ((index + 0.5) / Math.max(leftStack.length, 1)) * 100;
+              const inset = leftInsetCycle[index % leftInsetCycle.length];
+              const size = sizeCycle[index % sizeCycle.length];
+              const yJitter = yJitterCycle[index % yJitterCycle.length];
+              const isLeadLeft = index === 0;
+              const isSecondLeft = index === 1;
+              const isThirdLeft = index === 2;
+              const scale = isLeadLeft
+                ? 1.24
+                : isSecondLeft || isThirdLeft
+                  ? 1.03
+                  : 0.86 + (index % 7) * 0.09;
+              const tileSizeMultiplier = isLeadLeft ? 2.1 : isSecondLeft ? 1.58 : isThirdLeft ? 1.4 : 1;
+              const tileWidth = Math.round(size.width * tileSizeMultiplier);
+              const tileHeight = Math.round(size.height * tileSizeMultiplier);
+              const adjustedTopPercent = isLeadLeft
+                ? topPercent + 4
+                : isSecondLeft
+                  ? topPercent + 20
+                  : isThirdLeft
+                    ? topPercent - 8
+                    : topPercent;
+              const leftOffset = isSecondLeft
+                ? `calc(-1 * clamp(246px, 15vw, 340px) + ${Math.max(0, inset + 2)}px)`
+                : isThirdLeft
+                  ? `calc(-1 * clamp(304px, 20vw, 430px) + ${Math.max(0, inset - 14)}px)`
+                  : `calc(-1 * clamp(258px, 17vw, 372px) + ${inset}px)`;
+              const baseZClass = isSecondLeft ? "z-50" : isThirdLeft ? "z-40" : isLeadLeft ? "z-30" : "z-20";
+              return (
+                <div
+                  key={`${image.url}-left-full-${index}`}
+                  className={`group pointer-events-auto absolute ${visibleAtIndexClass(index)} ${baseZClass} overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-[2147483647] hover:-translate-y-1.5 hover:scale-[1.06] hover:shadow-2xl hover:shadow-black/45`}
+                  style={{
+                    width: `${tileWidth}px`,
+                    height: `${tileHeight}px`,
+                    left: leftOffset,
+                    top: `calc(${adjustedTopPercent}% - ${Math.round(tileHeight / 2)}px + ${yJitter}px)`,
+                    rotate: `${rotationCycleLeft[index % rotationCycleLeft.length]}deg`,
+                    transform: `scale(${scale})`,
+                  }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={`${item.commonName} additional iNaturalist photo ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                  {(image.attribution || image.license) && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
+                      {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {rightStack.map((image, index) => {
+              const topPercent = ((index + 0.5) / Math.max(rightStack.length, 1)) * 100;
+              const inset = rightInsetCycle[index % rightInsetCycle.length];
+              const size = sizeCycle[(index + 2) % sizeCycle.length];
+              const yJitter = yJitterCycle[(index + 3) % yJitterCycle.length];
+              const isTopRight = index < 2;
+              const rightMultiplier = isTopRight ? 1.35 : 1;
+              const tileWidth = Math.round(size.width * rightMultiplier);
+              const tileHeight = Math.round(size.height * rightMultiplier);
+              const scale = 0.84 + ((index + 2) % 7) * 0.09;
+              const baseZClass = "z-20";
+              return (
+                <div
+                  key={`${image.url}-right-full-${index}`}
+                  className={`group pointer-events-auto absolute ${visibleAtIndexClass(index)} ${baseZClass} overflow-hidden rounded-xl border border-white/80 shadow-lg shadow-black/20 transition-all duration-300 ease-out hover:z-[2147483647] hover:-translate-y-1.5 hover:scale-[1.06] hover:shadow-2xl hover:shadow-black/45`}
+                  style={{
+                    width: `${tileWidth}px`,
+                    height: `${tileHeight}px`,
+                    right: `calc(-1 * clamp(258px, 17vw, 372px) + ${inset}px)`,
+                    top: `calc(${topPercent}% - ${Math.round(tileHeight / 2)}px + ${yJitter}px)`,
+                    rotate: `${rotationCycleRight[index % rotationCycleRight.length]}deg`,
+                    transform: `scale(${scale})`,
+                  }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={`${item.commonName} additional iNaturalist photo ${leftStack.length + index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                  {(image.attribution || image.license) && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[10px] leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <p className="line-clamp-2">{image.attribution || "iNaturalist contributor"}</p>
+                      {image.license && <p className="mt-0.5 opacity-90">License: {image.license}</p>}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </article>
     </main>
   );

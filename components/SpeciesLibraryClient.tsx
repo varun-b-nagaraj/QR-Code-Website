@@ -10,6 +10,7 @@ const categoryFilters: SpeciesCategory[] = [
   "Mammals",
   "Reptiles",
   "Insects",
+  "Additional Insights",
 ];
 
 interface SpeciesLibraryClientProps {
@@ -18,6 +19,7 @@ interface SpeciesLibraryClientProps {
 }
 
 function buildCardTag(item: Species): string {
+  if (item.category === "Additional Insights") return "Additional Insight";
   const base = item.category === "Plants" ? (item.subcategory === "Trees" ? "Tree" : "Plant") : "Animal";
   if (!item.subcategory) return base;
   if (base === "Tree" && item.subcategory === "Trees") return "Tree";
@@ -40,6 +42,11 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     const map = new Map<SpeciesCategory, string[]>();
 
     for (const category of categoryFilters) {
+      if (category === "Additional Insights") {
+        map.set(category, []);
+        continue;
+      }
+
       const values = Array.from(
         new Set(
           items
@@ -59,10 +66,11 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     const counts = new Map<SpeciesCategory, number>();
 
     for (const category of categoryFilters) {
-      counts.set(
-        category,
-        items.filter((item) => item.category === category && item.scientificName !== "N/A").length,
-      );
+      const count =
+        category === "Additional Insights"
+          ? items.filter((item) => item.category === category).length
+          : items.filter((item) => item.category === category && item.scientificName !== "N/A").length;
+      counts.set(category, count);
     }
 
     return counts;
@@ -74,9 +82,12 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
         item.commonName.toLowerCase().includes(query.toLowerCase()) ||
         item.scientificName.toLowerCase().includes(query.toLowerCase());
       const categoryMatch = categories.size === 0 || categories.has(item.category);
-      const statusMatch = statusFilter === "all" || item.nativeStatus === statusFilter;
+      const statusMatch =
+        item.category === "Additional Insights" || statusFilter === "all" || item.nativeStatus === statusFilter;
       const subcategoryMatch =
-        selectedSubcategories.size === 0 || (item.subcategory ? selectedSubcategories.has(item.subcategory) : false);
+        selectedSubcategories.size === 0 ||
+        item.category === "Additional Insights" ||
+        (item.subcategory ? selectedSubcategories.has(item.subcategory) : false);
 
       return textMatch && categoryMatch && statusMatch && subcategoryMatch;
     });
@@ -228,7 +239,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
               key={item.slug}
               title={item.commonName}
               description={
-                item.subcategory === "Additional Insights" || item.scientificName === "N/A"
+                item.category === "Additional Insights" || item.scientificName === "N/A"
                   ? "Additional Insights"
                   : `${item.scientificName} • ${item.nativeStatusRaw || item.nativeStatus}`
               }

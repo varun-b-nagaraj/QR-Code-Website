@@ -8,6 +8,7 @@ const validCategories = new Set<SpeciesCategory>([
   "Mammals",
   "Reptiles",
   "Insects",
+  "Additional Insights",
 ]);
 
 export default async function SpeciesPage({

@@ -1,11 +1,19 @@
 export function Footer() {
   return (
-    <footer className="mt-12 bg-county-text text-white">
-      <div className="mx-auto grid w-full max-w-7xl gap-3 px-4 py-8 text-sm sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-        <p>County Parks</p>
-        <p>Educational Trail Project</p>
-        <p>Eagle Scout Community Project</p>
-        <p>Contact Information</p>
+    <footer className="mt-12 border-t border-white/10 bg-county-text text-white">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-5 px-4 py-10 text-center sm:px-6 lg:px-8">
+        <p className="text-base font-semibold tracking-wide">Williamson County Nature Library</p>
+        <div className="h-px w-24 bg-white/25" />
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/90">
+          <p>Educational Trail Project</p>
+          <p className="hidden sm:block">•</p>
+          <p>Eagle Scout Community Project</p>
+          <p className="hidden sm:block">•</p>
+          <p>County Parks and Conservation Education</p>
+        </div>
+        <p className="text-xs text-white/70">
+          Explore local species, habitats, and stewardship guidance for Central Texas parks.
+        </p>
       </div>
     </footer>
   );

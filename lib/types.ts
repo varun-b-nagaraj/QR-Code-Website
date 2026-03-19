@@ -3,7 +3,8 @@ export type SpeciesCategory =
   | "Birds"
   | "Mammals"
   | "Reptiles"
-  | "Insects";
+  | "Insects"
+  | "Additional Insights";
 
 export type NativeStatus = "Native" | "Invasive" | "Introduced" | "Unknown";
 

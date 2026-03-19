@@ -297,7 +297,7 @@ async function main() {
         inat_additional_images: (await fetchObservationGallery({
           taxonId: taxon.id,
           scientificName: item.scientificName,
-          limit: 6,
+          limit: 18,
         })).filter((galleryImage) => galleryImage.url !== photo.url),
       };
 
