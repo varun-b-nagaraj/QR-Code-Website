@@ -1,6 +1,7 @@
 import { Species } from "@/lib/types";
+import { inatSpeciesMediaBySlug } from "@/data/inat-species-media";
 
-export const species: Species[] = [
+const baseSpecies: Species[] = [
   {
     "slug": "escarpment-live-oak",
     "commonName": "Escarpment Live Oak",
@@ -3530,6 +3531,17 @@ export const species: Species[] = [
     "funFact": ""
   }
 ];
+
+export const species: Species[] = baseSpecies.map((item) => {
+  const media = inatSpeciesMediaBySlug[item.slug];
+  if (!media) return item;
+
+  return {
+    ...item,
+    ...media,
+    image: media.cover_image_url || item.image,
+  };
+});
 
 export const speciesBySlug = Object.fromEntries(
   species.map((item) => [item.slug, item]),

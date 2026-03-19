@@ -233,6 +233,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
                   : `${item.scientificName} • ${item.nativeStatusRaw || item.nativeStatus}`
               }
               image={item.image}
+              imageAlt={item.scientificName === "N/A" ? item.commonName : `${item.commonName} (${item.scientificName})`}
               href={`/species/${item.slug}`}
               tag={buildCardTag(item)}
             />

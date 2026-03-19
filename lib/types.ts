@@ -22,6 +22,11 @@ export interface Species {
   parkLocation: string;
   ecologicalRole: string;
   funFact: string;
+  inat_taxon_id?: number;
+  cover_image_url?: string;
+  cover_image_attribution?: string;
+  cover_image_license?: string;
+  cover_image_source?: "iNaturalist";
 }
 
 export interface Trail {

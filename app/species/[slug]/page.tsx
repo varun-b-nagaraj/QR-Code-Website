@@ -195,7 +195,13 @@ export default async function SpeciesDetailPage({
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <article className="overflow-hidden rounded-2xl bg-white shadow-sm">
         <div className="relative h-72 w-full sm:h-80">
-          <Image src={item.image} alt={item.commonName} fill className="object-cover" priority />
+          <Image
+            src={item.image}
+            alt={`${item.commonName} (${item.scientificName})`}
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
         <div className="space-y-5 p-6 sm:p-8">
@@ -205,6 +211,12 @@ export default async function SpeciesDetailPage({
           <span className="inline-block rounded-full bg-county-panel px-3 py-1 text-sm font-semibold text-county-text">
             {item.nativeStatusRaw || item.nativeStatus}
           </span>
+          {item.cover_image_source === "iNaturalist" && item.cover_image_attribution && (
+            <p className="text-xs text-county-text-secondary">
+              Photo: {item.cover_image_attribution}
+              {item.cover_image_license ? ` • License: ${item.cover_image_license}` : ""}
+            </p>
+          )}
 
           {sections.map((section) => (
             <section key={section.title}>
