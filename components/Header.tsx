@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -21,8 +22,8 @@ export function Header() {
     <header className="sticky top-0 z-30 border-b border-black/5 bg-county-white/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-3 sm:px-5 lg:px-6">
         <Link href="/" className="mr-2 flex shrink-0 items-center gap-2" aria-label="County Parks Home">
-          <div className="flex h-9 w-9 items-center justify-center rounded bg-county-blue text-sm font-semibold text-white">
-            W
+          <div className="relative h-9 w-14 overflow-hidden rounded">
+            <Image src="/favicon.svg" alt="County Parks logo" fill className="object-contain" priority />
           </div>
           <div className="hidden leading-tight sm:block">
             <p className="text-sm font-semibold text-county-text">County Parks</p>
