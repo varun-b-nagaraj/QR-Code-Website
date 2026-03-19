@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { InfoCard } from "@/components/InfoCard";
 import { Species, SpeciesCategory } from "@/lib/types";
 
+const PAGE_SIZE = 20;
+
 const categoryFilters: SpeciesCategory[] = [
   "Plants",
   "Birds",
@@ -42,8 +44,10 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     initialCategory ? new Set([initialCategory]) : new Set(),
   );
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const filtersButtonRef = useRef<HTMLButtonElement | null>(null);
   const filtersPanelRef = useRef<HTMLDivElement | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!filtersOpen) return;
@@ -145,6 +149,40 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
       return textMatch && categoryMatch && statusMatch && subcategoryMatch;
     });
   }, [categories, items, query, selectedSubcategories, statusFilter]);
+
+  const orderedFiltered = useMemo(() => {
+    const regular: Species[] = [];
+    const insights: Species[] = [];
+
+    for (const item of filtered) {
+      if (item.category === "Additional Insights") insights.push(item);
+      else regular.push(item);
+    }
+
+    return [...regular, ...insights];
+  }, [filtered]);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [orderedFiltered]);
+
+  const hasMore = visibleCount < orderedFiltered.length;
+  const visibleItems = useMemo(() => orderedFiltered.slice(0, visibleCount), [orderedFiltered, visibleCount]);
+
+  useEffect(() => {
+    if (!hasMore || !loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        setVisibleCount((previous) => Math.min(previous + PAGE_SIZE, orderedFiltered.length));
+      },
+      { rootMargin: "250px 0px" },
+    );
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, orderedFiltered.length]);
 
   const toggleCategoryWithSubcategories = (
     category: SpeciesCategory,
@@ -340,7 +378,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
           aria-label="Search species"
         />
         <div className="grid gap-4 sm:grid-cols-2">
-          {filtered.map((item) => (
+          {visibleItems.map((item) => (
             <InfoCard
               key={item.slug}
               title={item.commonName}
@@ -356,7 +394,13 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
             />
           ))}
         </div>
-        {filtered.length === 0 && (
+        {hasMore && <div ref={loadMoreRef} className="h-6" aria-hidden />}
+        {orderedFiltered.length > 0 && (
+          <p className="mt-4 text-xs text-county-text-secondary">
+            Showing {Math.min(visibleCount, orderedFiltered.length)} of {orderedFiltered.length}
+          </p>
+        )}
+        {orderedFiltered.length === 0 && (
           <p className="mt-6 rounded-lg bg-county-panel p-4 text-sm text-county-text">No species match these filters.</p>
         )}
       </div>
