@@ -226,7 +226,7 @@ export function SpeciesLibraryClient({ items, initialCategory }: SpeciesLibraryC
     <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold text-county-green">Species Library</h1>
+          <h1 className="text-3xl font-semibold text-county-green">Nature Library</h1>
           <p className="mt-2 text-county-text-secondary">Search Central Texas plants and wildlife found near educational trail stops.</p>
         </div>
 

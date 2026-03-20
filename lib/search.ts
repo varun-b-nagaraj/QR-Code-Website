@@ -17,7 +17,7 @@ const staticPages: SearchResult[] = [
     type: "Page",
   },
   {
-    title: "Species Library",
+    title: "Nature Library",
     description: "Browse plants and wildlife found around trail areas.",
     href: "/species",
     type: "Page",

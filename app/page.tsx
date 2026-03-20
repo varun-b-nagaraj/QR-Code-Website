@@ -21,7 +21,7 @@ const cardItems = [
     href: "/trails/champion-park-trail",
   },
   {
-    title: "Native Species Library",
+    title: "Nature Library",
     description: "Browse native plants and animals found in the park.",
     image: nativeImage,
     href: "/species",

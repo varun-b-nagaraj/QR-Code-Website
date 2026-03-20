@@ -94,7 +94,7 @@ function getInsightSupportCopy(item: Species) {
   return {
     title: "Why this matters",
     body:
-      "This article adds context around the species library so visitors can connect individual sightings to habitat, behavior, and broader park ecology.",
+      "This article adds context around the nature library so visitors can connect individual sightings to habitat, behavior, and broader park ecology.",
     titleTwo: "How to use this page",
     bodyTwo:
       "Use the overview to get oriented, then read the main text for the deeper ecological frame behind the category.",
@@ -240,7 +240,7 @@ export default async function SpeciesDetailPage({
                 href="/species"
                 className="inline-flex items-center rounded-full bg-county-dark-green px-5 py-2 font-semibold !text-white visited:!text-white hover:!text-white focus:!text-white transition-colors duration-200 hover:bg-[#3f6f2f]"
               >
-                Back to Species Library
+                Back to Nature Library
               </Link>
             </div>
           </div>
@@ -263,7 +263,7 @@ export default async function SpeciesDetailPage({
         </div>
 
         <div className="relative z-20 space-y-5 bg-white p-6 sm:p-8">
-          <p className="text-sm text-county-text-secondary">Species Library</p>
+          <p className="text-sm text-county-text-secondary">Nature Library</p>
           <h1 className="text-4xl font-semibold text-county-green">{displayItem.commonName}</h1>
           <p className="text-lg italic text-county-text-secondary">{displayItem.scientificName}</p>
           <span className="inline-block rounded-full bg-county-panel px-3 py-1 text-sm font-semibold text-county-text">
@@ -295,7 +295,7 @@ export default async function SpeciesDetailPage({
               href="/species"
               className="inline-flex items-center rounded-full bg-county-dark-green px-5 py-2 font-semibold !text-white visited:!text-white hover:!text-white focus:!text-white transition-colors duration-200 hover:bg-[#3f6f2f]"
             >
-              Back to Species Library
+              Back to Nature Library
             </Link>
           </div>
         </div>
