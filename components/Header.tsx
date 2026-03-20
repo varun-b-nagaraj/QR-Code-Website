@@ -83,7 +83,7 @@ export function Header() {
         <div className="ml-auto flex items-center gap-2 lg:hidden">
           <Link
             href="/ai"
-            className="ai-scan-ambient relative inline-flex h-10 min-w-[112px] items-center justify-center rounded-full border-2 border-county-green bg-white px-4 text-sm font-semibold text-county-green"
+            className="inline-flex h-10 min-w-[112px] items-center justify-center rounded-full border-2 border-county-green bg-white px-4 text-sm font-semibold text-county-green"
             aria-label="Open AI Scan"
           >
             AI Scan
