@@ -103,6 +103,7 @@ export function AIAssistantClient() {
   const [mobileSpeciesExpanded, setMobileSpeciesExpanded] = useState(false);
   const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
   const [cropRect, setCropRect] = useState<CropRect>({ x: 0.2, y: 0.2, width: 0.6, height: 0.6 });
+  const [isDraggingCrop, setIsDraggingCrop] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -226,6 +227,27 @@ export function AIAssistantClient() {
       }
     };
   }, [cameraState]);
+
+  useEffect(() => {
+    if (cameraState !== "review" && !isDraggingCrop) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehaviorY;
+    const previousHtmlOverscroll = document.documentElement.style.overscrollBehaviorY;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overscrollBehaviorY = "none";
+    document.documentElement.style.overscrollBehaviorY = "none";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overscrollBehaviorY = previousBodyOverscroll;
+      document.documentElement.style.overscrollBehaviorY = previousHtmlOverscroll;
+    };
+  }, [cameraState, isDraggingCrop]);
 
   const speciesContext = useMemo(() => buildSpeciesContext(identified), [identified]);
 
@@ -452,6 +474,7 @@ export function AIAssistantClient() {
     const stage = cropStageRef.current;
     if (!stage) return;
     event.preventDefault();
+    setIsDraggingCrop(true);
 
     const stageRect = stage.getBoundingClientRect();
     const startX = event.clientX;
@@ -459,6 +482,7 @@ export function AIAssistantClient() {
     const initial = { ...cropRect };
 
     const onMove = (moveEvent: PointerEvent) => {
+      moveEvent.preventDefault();
       const dx = (moveEvent.clientX - startX) / stageRect.width;
       const dy = (moveEvent.clientY - startY) / stageRect.height;
 
@@ -509,6 +533,7 @@ export function AIAssistantClient() {
     const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      setIsDraggingCrop(false);
     };
 
     window.addEventListener("pointermove", onMove);
@@ -556,8 +581,8 @@ export function AIAssistantClient() {
       )}
 
       {cameraState === "review" && capturedPhotoUrl && (
-        <div className="absolute inset-0 z-40 bg-black">
-          <div ref={cropStageRef} className="relative h-full w-full overflow-hidden">
+        <div className="absolute inset-0 z-40 touch-none overscroll-none bg-black">
+          <div ref={cropStageRef} className="relative h-full w-full touch-none overflow-hidden">
             <img src={capturedPhotoUrl} alt="Captured preview" className="h-full w-full object-contain" />
 
             <div
@@ -574,28 +599,28 @@ export function AIAssistantClient() {
               type="button"
               aria-label="Adjust top left crop corner"
               onPointerDown={(event) => beginCropHandleDrag("top-left", event)}
-              className="absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute h-8 w-8 touch-none -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${cropRect.x * 100}%`, top: `${cropRect.y * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust top right crop corner"
               onPointerDown={(event) => beginCropHandleDrag("top-right", event)}
-              className="absolute h-8 w-8 -translate-y-1/2 translate-x-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute h-8 w-8 touch-none -translate-y-1/2 translate-x-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${cropRect.y * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust bottom left crop corner"
               onPointerDown={(event) => beginCropHandleDrag("bottom-left", event)}
-              className="absolute h-8 w-8 -translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute h-8 w-8 touch-none -translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${cropRect.x * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust bottom right crop corner"
               onPointerDown={(event) => beginCropHandleDrag("bottom-right", event)}
-              className="absolute h-8 w-8 translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute h-8 w-8 touch-none translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
             />
           </div>
