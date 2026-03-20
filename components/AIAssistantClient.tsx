@@ -199,6 +199,34 @@ export function AIAssistantClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (cameraState !== "open" || !videoRef.current || !cameraStreamRef.current) return;
+
+    const video = videoRef.current;
+    const stream = cameraStreamRef.current;
+    video.srcObject = stream;
+
+    const playVideo = async () => {
+      try {
+        await video.play();
+      } catch {
+        setCameraError("Camera preview failed to start. Please try again.");
+      }
+    };
+
+    video.onloadedmetadata = () => {
+      void playVideo();
+    };
+    void playVideo();
+
+    return () => {
+      video.onloadedmetadata = null;
+      if (video.srcObject) {
+        video.srcObject = null;
+      }
+    };
+  }, [cameraState]);
+
   const speciesContext = useMemo(() => buildSpeciesContext(identified), [identified]);
 
   function handleChatScroll() {
@@ -293,6 +321,9 @@ export function AIAssistantClient() {
   }
 
   function stopCameraStream() {
+    if (videoRef.current?.srcObject) {
+      videoRef.current.srcObject = null;
+    }
     if (cameraStreamRef.current) {
       cameraStreamRef.current.getTracks().forEach((track) => track.stop());
       cameraStreamRef.current = null;
@@ -327,13 +358,6 @@ export function AIAssistantClient() {
 
       cameraStreamRef.current = stream;
       setCameraState("open");
-
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          void videoRef.current.play();
-        }
-      });
     } catch {
       setCameraError("Unable to access camera. Check browser camera permissions.");
     }

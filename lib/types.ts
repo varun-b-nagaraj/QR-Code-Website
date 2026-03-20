@@ -96,24 +96,6 @@ export interface SpeciesEnrichmentResult {
   unavailableReason?: string;
 }
 
-export interface SightingRecordPayload {
-  uploaded_image_url: string;
-  detected_label: string;
-  detection_confidence: number;
-  bounding_box?: DetectionBoundingBox | null;
-  inaturalist_taxon_id?: number | null;
-  common_name?: string | null;
-  scientific_name?: string | null;
-  reference_image_url?: string | null;
-  taxonomy?: string[] | null;
-  description_summary?: string | null;
-  latitude?: number | null;
-  longitude?: number | null;
-  created_at: string;
-  status: string;
-  source_type: string;
-}
-
 export interface IdentificationResult {
   type: "plant" | "animal";
   primary: IdentificationCandidate;
@@ -123,9 +105,4 @@ export interface IdentificationResult {
   providerNote?: string;
   detection?: DetectionStageResult;
   enrichment?: SpeciesEnrichmentResult;
-  sighting?: {
-    status: "saved" | "skipped" | "failed";
-    id?: string | number;
-    message?: string;
-  };
 }
