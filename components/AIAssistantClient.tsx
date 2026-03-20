@@ -80,17 +80,46 @@ export function AIAssistantClient() {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [cameraState, setCameraState] = useState<CameraState>("closed");
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isComposerFocused, setIsComposerFocused] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
+  const hasUserSentMessage = messages.some((message) => message.role === "user");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
 
   useEffect(() => {
     const container = chatScrollRef.current;
     if (!container || !isPinnedToBottom) return;
     container.scrollTop = container.scrollHeight;
   }, [messages, chatLoading, isPinnedToBottom]);
+
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 640px)").matches;
+    if (!isMobile || !isComposerFocused) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehaviorY;
+    const previousHtmlOverscroll = document.documentElement.style.overscrollBehaviorY;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overscrollBehaviorY = "none";
+    document.documentElement.style.overscrollBehaviorY = "none";
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overscrollBehaviorY = previousBodyOverscroll;
+      document.documentElement.style.overscrollBehaviorY = previousHtmlOverscroll;
+    };
+  }, [isComposerFocused]);
 
   useEffect(() => {
     return () => {
@@ -301,7 +330,7 @@ export function AIAssistantClient() {
   }
 
   return (
-    <section className="relative flex h-[calc(100vh-64px)] w-full bg-county-white">
+    <section className="relative flex h-[calc(100dvh-64px)] min-h-[calc(100vh-64px)] w-full bg-county-white">
       {dragActive && (
         <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-county-green/15">
           <div className="rounded-xl border border-county-green bg-white px-5 py-3 text-sm font-semibold text-county-green">
@@ -427,7 +456,7 @@ export function AIAssistantClient() {
         </div>
 
         <form onSubmit={(event) => void handleSend(event)} className="border-t border-county-panel bg-county-bg p-4 sm:p-6">
-          <div className="mb-3 flex flex-wrap gap-2">
+          <div className={`mb-3 flex-wrap gap-2 ${hasUserSentMessage ? "hidden sm:flex" : "flex"}`}>
             {quickPrompts.map((item) => (
               <button
                 key={item}
@@ -447,6 +476,8 @@ export function AIAssistantClient() {
             <input
               value={input}
               onChange={(event) => setInput(event.target.value)}
+              onFocus={() => setIsComposerFocused(true)}
+              onBlur={() => setIsComposerFocused(false)}
               placeholder="Ask about the species from your photo..."
               className="flex-1 rounded-full border border-county-panel bg-white px-4 py-3 text-sm outline-none focus:border-county-green"
             />
