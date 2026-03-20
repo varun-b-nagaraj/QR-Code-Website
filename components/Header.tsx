@@ -104,7 +104,7 @@ export function Header() {
       {open && (
         <nav className="border-t border-county-panel bg-county-white px-4 py-3 lg:hidden" aria-label="Mobile Primary">
           <ul className="space-y-1">
-            {[...primaryNavItems, aboutNavItem, { label: "AI Assistant", href: "/ai" }].map((item) => {
+            {[...primaryNavItems, aboutNavItem].map((item) => {
               const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href.split("?")[0]));
               return (
                 <li key={`${item.label}-${item.href}`}>
