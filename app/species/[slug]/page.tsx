@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { speciesBySlug } from "@/data/species";
+import { inatSpeciesMediaBySlug } from "@/data/inat-species-media";
 import { Species } from "@/lib/types";
 
 export function generateStaticParams() {
@@ -109,28 +110,36 @@ export default async function SpeciesDetailPage({
   const item = speciesBySlug[slug];
 
   if (!item) notFound();
+  const media = inatSpeciesMediaBySlug[slug];
+  const displayItem: Species = media
+    ? {
+        ...item,
+        ...media,
+        image: media.cover_image_url || item.image,
+      }
+    : item;
 
-  const insight = isInsight(item);
+  const insight = isInsight(displayItem);
   const sections = [
-    { title: "Description", value: item.description },
-    { title: "Habitat", value: item.habitat },
-    { title: "Where Found In The Park", value: item.parkLocation },
-    { title: "Ecological Role", value: item.ecologicalRole },
-    { title: "Fun Fact", value: item.funFact },
+    { title: "Description", value: displayItem.description },
+    { title: "Habitat", value: displayItem.habitat },
+    { title: "Where Found In The Park", value: displayItem.parkLocation },
+    { title: "Ecological Role", value: displayItem.ecologicalRole },
+    { title: "Fun Fact", value: displayItem.funFact },
   ].filter((section) => section.value.trim());
   const descriptionSection = sections.find((section) => section.title === "Description");
   const remainingSections = sections.filter((section) => section.title !== "Description");
-  const additionalImages = item.inat_additional_images || [];
-  const additionalWithoutCover = item.cover_image_url
-    ? additionalImages.filter((image) => image.url !== item.cover_image_url)
+  const additionalImages = displayItem.inat_additional_images || [];
+  const additionalWithoutCover = displayItem.cover_image_url
+    ? additionalImages.filter((image) => image.url !== displayItem.cover_image_url)
     : additionalImages;
   const collagePool = [
     ...additionalWithoutCover,
-    ...(item.cover_image_url
+    ...(displayItem.cover_image_url
       ? [{
-          url: item.cover_image_url,
-          attribution: item.cover_image_attribution || "",
-          license: item.cover_image_license || "",
+          url: displayItem.cover_image_url,
+          attribution: displayItem.cover_image_attribution || "",
+          license: displayItem.cover_image_license || "",
         }]
       : []),
   ];
@@ -166,11 +175,11 @@ export default async function SpeciesDetailPage({
 
   if (insight) {
     const detailBlocks =
-      item.description.trim() === item.summary.trim()
+      displayItem.description.trim() === displayItem.summary.trim()
         ? []
-        : renderTextBlock(item.description, "mt-3 text-county-text leading-7");
-    const supportCopy = getInsightSupportCopy(item);
-    const insightLabel = item.category === "Additional Insights" ? "Library Insight" : `${item.category} Insight`;
+        : renderTextBlock(displayItem.description, "mt-3 text-county-text leading-7");
+    const supportCopy = getInsightSupportCopy(displayItem);
+    const insightLabel = displayItem.category === "Additional Insights" ? "Library Insight" : `${displayItem.category} Insight`;
 
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -181,18 +190,18 @@ export default async function SpeciesDetailPage({
                 {insightLabel}
               </p>
               <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight text-county-dark-green sm:text-5xl">
-                {item.commonName}
+                {displayItem.commonName}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-county-text">
-                {item.summary}
+                {displayItem.summary}
               </p>
             </div>
 
             <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
               <div className="relative aspect-[4/3] w-full p-3">
                 <Image
-                  src={item.image}
-                  alt={item.commonName}
+                  src={displayItem.image}
+                  alt={displayItem.commonName}
                   fill
                   priority
                   className="object-contain"
@@ -205,7 +214,7 @@ export default async function SpeciesDetailPage({
           <div className="space-y-8 p-6 sm:p-8">
             <section className="rounded-2xl bg-county-bg p-5">
               <h2 className="text-xl font-semibold text-county-dark-green">Overview</h2>
-              {renderTextBlock(item.summary, "mt-3 text-county-text leading-7")}
+              {renderTextBlock(displayItem.summary, "mt-3 text-county-text leading-7")}
             </section>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -245,8 +254,8 @@ export default async function SpeciesDetailPage({
       <article className="relative overflow-visible rounded-2xl bg-white shadow-sm">
         <div className="relative h-72 w-full overflow-hidden rounded-t-2xl sm:h-80">
           <Image
-            src={item.image}
-            alt={`${item.commonName} (${item.scientificName})`}
+            src={displayItem.image}
+            alt={`${displayItem.commonName} (${displayItem.scientificName})`}
             fill
             className="object-cover"
             priority
@@ -255,15 +264,15 @@ export default async function SpeciesDetailPage({
 
         <div className="relative z-20 space-y-5 bg-white p-6 sm:p-8">
           <p className="text-sm text-county-text-secondary">Species Library</p>
-          <h1 className="text-4xl font-semibold text-county-green">{item.commonName}</h1>
-          <p className="text-lg italic text-county-text-secondary">{item.scientificName}</p>
+          <h1 className="text-4xl font-semibold text-county-green">{displayItem.commonName}</h1>
+          <p className="text-lg italic text-county-text-secondary">{displayItem.scientificName}</p>
           <span className="inline-block rounded-full bg-county-panel px-3 py-1 text-sm font-semibold text-county-text">
-            {item.nativeStatusRaw || item.nativeStatus}
+            {displayItem.nativeStatusRaw || displayItem.nativeStatus}
           </span>
-          {item.cover_image_source === "iNaturalist" && item.cover_image_attribution && (
+          {displayItem.cover_image_source === "iNaturalist" && displayItem.cover_image_attribution && (
             <p className="text-xs text-county-text-secondary">
-              Photo: {item.cover_image_attribution}
-              {item.cover_image_license ? ` • License: ${item.cover_image_license}` : ""}
+              Photo: {displayItem.cover_image_attribution}
+              {displayItem.cover_image_license ? ` • License: ${displayItem.cover_image_license}` : ""}
             </p>
           )}
           {descriptionSection && (
@@ -337,7 +346,7 @@ export default async function SpeciesDetailPage({
                 >
                   <Image
                     src={image.url}
-                    alt={`${item.commonName} additional iNaturalist photo ${index + 1}`}
+                    alt={`${displayItem.commonName} additional iNaturalist photo ${index + 1}`}
                     fill
                     className="object-cover"
                   />
@@ -377,7 +386,7 @@ export default async function SpeciesDetailPage({
                 >
                   <Image
                     src={image.url}
-                    alt={`${item.commonName} additional iNaturalist photo ${leftStack.length + index + 1}`}
+                    alt={`${displayItem.commonName} additional iNaturalist photo ${leftStack.length + index + 1}`}
                     fill
                     className="object-cover"
                   />

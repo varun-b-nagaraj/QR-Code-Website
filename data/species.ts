@@ -1,5 +1,4 @@
 import { Species } from "@/lib/types";
-import { inatSpeciesMediaBySlug } from "@/data/inat-species-media";
 
 const baseSpecies: Species[] = [
   {
@@ -3985,16 +3984,7 @@ const baseSpecies: Species[] = [
   }
 ];
 
-export const species: Species[] = baseSpecies.map((item) => {
-  const media = inatSpeciesMediaBySlug[item.slug];
-  if (!media) return item;
-
-  return {
-    ...item,
-    ...media,
-    image: media.cover_image_url || item.image,
-  };
-});
+export const species: Species[] = baseSpecies;
 
 export const speciesBySlug = Object.fromEntries(
   species.map((item) => [item.slug, item]),
