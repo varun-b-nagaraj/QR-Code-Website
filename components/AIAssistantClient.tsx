@@ -1,11 +1,14 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ClientChatMessage, streamAssistant } from "@/lib/aiClient";
 import { identifyBestFromPhoto } from "@/lib/identifyBest";
 import { IdentificationResult } from "@/lib/types";
 
-type CameraState = "closed" | "open";
+type CameraState = "closed" | "open" | "review";
+type CropHandle = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+type CropRect = { x: number; y: number; width: number; height: number };
+const MIN_CROP_SIZE = 0.16;
 
 const quickPrompts = [
   "Give me a quick field guide for this species.",
@@ -50,13 +53,28 @@ function cleanAssistantText(value: string): string {
     .trim();
 }
 
-function findDroppedImage(files: FileList): File | null {
-  for (const entry of Array.from(files)) {
-    if (entry.type.startsWith("image/")) {
-      return entry;
+function findDroppedImage(dataTransfer: DataTransfer | null): File | null {
+  if (!dataTransfer) return null;
+
+  for (const item of Array.from(dataTransfer.items ?? [])) {
+    if (item.kind !== "file") continue;
+    const file = item.getAsFile();
+    if (file && file.type.startsWith("image/")) {
+      return file;
     }
   }
+
+  for (const file of Array.from(dataTransfer.files ?? [])) {
+    if (file.type.startsWith("image/")) {
+      return file;
+    }
+  }
+
   return null;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 export function AIAssistantClient() {
@@ -82,10 +100,14 @@ export function AIAssistantClient() {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isComposerFocused, setIsComposerFocused] = useState(false);
   const [composerInset, setComposerInset] = useState(0);
+  const [mobileSpeciesExpanded, setMobileSpeciesExpanded] = useState(false);
+  const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
+  const [cropRect, setCropRect] = useState<CropRect>({ x: 0.2, y: 0.2, width: 0.6, height: 0.6 });
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const cropStageRef = useRef<HTMLDivElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
   const hasUserSentMessage = messages.some((message) => message.role === "user");
 
@@ -105,33 +127,30 @@ export function AIAssistantClient() {
   }, [messages, chatLoading, isPinnedToBottom]);
 
   useEffect(() => {
-    if (!isComposerFocused) {
-      setComposerInset(0);
-      return;
-    }
-
     const media = window.matchMedia("(max-width: 640px)");
     const viewport = window.visualViewport;
 
     const updateComposerInset = () => {
-      if (!media.matches || !viewport) {
+      if (!media.matches || !viewport || !isComposerFocused) {
         setComposerInset(0);
         return;
       }
 
       const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      setComposerInset(keyboardOffset);
+      setComposerInset(keyboardOffset > 12 ? keyboardOffset : 0);
     };
 
     updateComposerInset();
 
-    if (!viewport) return;
+    if (!viewport) return () => setComposerInset(0);
     viewport.addEventListener("resize", updateComposerInset);
     viewport.addEventListener("scroll", updateComposerInset);
+    window.addEventListener("resize", updateComposerInset);
 
     return () => {
       viewport.removeEventListener("resize", updateComposerInset);
       viewport.removeEventListener("scroll", updateComposerInset);
+      window.removeEventListener("resize", updateComposerInset);
       setComposerInset(0);
     };
   }, [isComposerFocused]);
@@ -144,8 +163,11 @@ export function AIAssistantClient() {
       if (cameraStreamRef.current) {
         cameraStreamRef.current.getTracks().forEach((track) => track.stop());
       }
+      if (capturedPhotoUrl) {
+        URL.revokeObjectURL(capturedPhotoUrl);
+      }
     };
-  }, [previewUrl]);
+  }, [capturedPhotoUrl, previewUrl]);
 
   useEffect(() => {
     const onDragOver = (event: DragEvent) => {
@@ -156,9 +178,7 @@ export function AIAssistantClient() {
     const onDrop = (event: DragEvent) => {
       event.preventDefault();
       setDragActive(false);
-      const files = event.dataTransfer?.files;
-      if (!files?.length) return;
-      const dropped = findDroppedImage(files);
+      const dropped = findDroppedImage(event.dataTransfer);
       if (dropped) {
         void processSelectedFile(dropped);
       }
@@ -204,6 +224,7 @@ export function AIAssistantClient() {
     try {
       const result = await identifyBestFromPhoto(file);
       setIdentified(result);
+      setMobileSpeciesExpanded(false);
 
       setMessages((prev) => [
         ...prev,
@@ -271,6 +292,20 @@ export function AIAssistantClient() {
     }
   }
 
+  function stopCameraStream() {
+    if (cameraStreamRef.current) {
+      cameraStreamRef.current.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
+    }
+  }
+
+  function clearCapturedPhoto() {
+    if (capturedPhotoUrl) {
+      URL.revokeObjectURL(capturedPhotoUrl);
+    }
+    setCapturedPhotoUrl(null);
+  }
+
   async function openCamera() {
     setActionsOpen(false);
     setCameraError(null);
@@ -279,6 +314,9 @@ export function AIAssistantClient() {
       setCameraError("Camera access is not supported in this browser.");
       return;
     }
+
+    clearCapturedPhoto();
+    setCropRect({ x: 0.2, y: 0.2, width: 0.6, height: 0.6 });
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -302,28 +340,21 @@ export function AIAssistantClient() {
   }
 
   function closeCamera() {
-    if (cameraStreamRef.current) {
-      cameraStreamRef.current.getTracks().forEach((track) => track.stop());
-      cameraStreamRef.current = null;
-    }
+    stopCameraStream();
+    clearCapturedPhoto();
     setCameraState("closed");
   }
 
-  async function handleCameraScan() {
+  async function captureCameraPhoto() {
     const video = videoRef.current;
     if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
       setCameraError("Camera is not ready yet.");
       return;
     }
 
-    const scanWidth = Math.floor(video.videoWidth * 0.74);
-    const scanHeight = Math.floor(video.videoHeight * 0.56);
-    const sx = Math.floor((video.videoWidth - scanWidth) / 2);
-    const sy = Math.floor((video.videoHeight - scanHeight) / 2);
-
     const canvas = document.createElement("canvas");
-    canvas.width = scanWidth;
-    canvas.height = scanHeight;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
@@ -331,7 +362,7 @@ export function AIAssistantClient() {
       return;
     }
 
-    ctx.drawImage(video, sx, sy, scanWidth, scanHeight, 0, 0, scanWidth, scanHeight);
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
     if (!blob) {
@@ -339,13 +370,129 @@ export function AIAssistantClient() {
       return;
     }
 
-    const photo = new File([blob], `camera-scan-${Date.now()}.jpg`, { type: "image/jpeg" });
+    const objectUrl = URL.createObjectURL(blob);
+    setCapturedPhotoUrl((previous) => {
+      if (previous) {
+        URL.revokeObjectURL(previous);
+      }
+      return objectUrl;
+    });
+    setCropRect({ x: 0.2, y: 0.2, width: 0.6, height: 0.6 });
+    stopCameraStream();
+    setCameraState("review");
+  }
+
+  async function applyCroppedSelection() {
+    if (!capturedPhotoUrl) {
+      setCameraError("No photo available to crop.");
+      return;
+    }
+
+    const image = new Image();
+    image.src = capturedPhotoUrl;
+
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error("Unable to load captured image."));
+    });
+
+    const sx = Math.floor(clamp(cropRect.x, 0, 1) * image.naturalWidth);
+    const sy = Math.floor(clamp(cropRect.y, 0, 1) * image.naturalHeight);
+    const sw = Math.floor(clamp(cropRect.width, MIN_CROP_SIZE, 1) * image.naturalWidth);
+    const sh = Math.floor(clamp(cropRect.height, MIN_CROP_SIZE, 1) * image.naturalHeight);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = sw;
+    canvas.height = sh;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      setCameraError("Unable to crop selected area.");
+      return;
+    }
+
+    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
+
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+    if (!blob) {
+      setCameraError("Unable to create selected crop.");
+      return;
+    }
+
+    const photo = new File([blob], `camera-crop-${Date.now()}.jpg`, { type: "image/jpeg" });
     closeCamera();
     await processSelectedFile(photo);
   }
 
+  function beginCropHandleDrag(handle: CropHandle, event: ReactPointerEvent<HTMLButtonElement>) {
+    const stage = cropStageRef.current;
+    if (!stage) return;
+    event.preventDefault();
+
+    const stageRect = stage.getBoundingClientRect();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const initial = { ...cropRect };
+
+    const onMove = (moveEvent: PointerEvent) => {
+      const dx = (moveEvent.clientX - startX) / stageRect.width;
+      const dy = (moveEvent.clientY - startY) / stageRect.height;
+
+      setCropRect(() => {
+        let x = initial.x;
+        let y = initial.y;
+        let width = initial.width;
+        let height = initial.height;
+
+        if (handle === "top-left") {
+          const nextX = clamp(initial.x + dx, 0, initial.x + initial.width - MIN_CROP_SIZE);
+          const nextY = clamp(initial.y + dy, 0, initial.y + initial.height - MIN_CROP_SIZE);
+          width = initial.width - (nextX - initial.x);
+          height = initial.height - (nextY - initial.y);
+          x = nextX;
+          y = nextY;
+        }
+
+        if (handle === "top-right") {
+          const nextWidth = clamp(initial.width + dx, MIN_CROP_SIZE, 1 - initial.x);
+          const nextY = clamp(initial.y + dy, 0, initial.y + initial.height - MIN_CROP_SIZE);
+          x = initial.x;
+          y = nextY;
+          width = nextWidth;
+          height = initial.height - (nextY - initial.y);
+        }
+
+        if (handle === "bottom-left") {
+          const nextX = clamp(initial.x + dx, 0, initial.x + initial.width - MIN_CROP_SIZE);
+          const nextHeight = clamp(initial.height + dy, MIN_CROP_SIZE, 1 - initial.y);
+          x = nextX;
+          y = initial.y;
+          width = initial.width - (nextX - initial.x);
+          height = nextHeight;
+        }
+
+        if (handle === "bottom-right") {
+          x = initial.x;
+          y = initial.y;
+          width = clamp(initial.width + dx, MIN_CROP_SIZE, 1 - initial.x);
+          height = clamp(initial.height + dy, MIN_CROP_SIZE, 1 - initial.y);
+        }
+
+        return { x, y, width, height };
+      });
+    };
+
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  }
+
   return (
-    <section className="relative flex h-[calc(100dvh-64px)] min-h-[calc(100vh-64px)] w-full bg-county-white">
+    <section className="relative flex h-[calc(100svh-64px)] min-h-[calc(100vh-64px)] w-full bg-county-white">
       {dragActive && (
         <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-county-green/15">
           <div className="rounded-xl border border-county-green bg-white px-5 py-3 text-sm font-semibold text-county-green">
@@ -355,26 +502,99 @@ export function AIAssistantClient() {
       )}
 
       {cameraState === "open" && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/75 p-4">
-          <div className="w-full max-w-md rounded-xl bg-black p-3">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
-              <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[56%] w-[74%] -translate-x-1/2 -translate-y-1/2 border-2 border-county-green shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
-            </div>
-            <div className="mt-3 flex gap-2">
+        <div className="absolute inset-0 z-40 bg-black">
+          <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/70 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-6 text-center text-sm font-semibold tracking-wide text-white/95">
+            Align subject, then capture
+          </div>
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10">
+            <div className="mx-auto flex max-w-md items-center justify-between">
               <button
                 type="button"
                 onClick={closeCamera}
-                className="flex-1 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white"
+                className="rounded-full border border-white/50 px-4 py-2 text-sm font-semibold text-white"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={() => void handleCameraScan()}
-                className="flex-1 rounded-full bg-county-green px-4 py-2 text-sm font-semibold text-white"
+                onClick={() => void captureCameraPhoto()}
+                className="relative h-20 w-20 rounded-full border-4 border-white bg-white/20"
+                aria-label="Capture photo"
               >
-                Scan
+                <span className="absolute inset-2 rounded-full bg-white" />
+              </button>
+              <div className="w-[74px]" aria-hidden />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cameraState === "review" && capturedPhotoUrl && (
+        <div className="absolute inset-0 z-40 bg-black">
+          <div ref={cropStageRef} className="relative h-full w-full overflow-hidden">
+            <img src={capturedPhotoUrl} alt="Captured preview" className="h-full w-full object-contain" />
+
+            <div
+              className="pointer-events-none absolute border-2 border-white shadow-[0_0_0_9999px_rgba(0,0,0,0.52)]"
+              style={{
+                left: `${cropRect.x * 100}%`,
+                top: `${cropRect.y * 100}%`,
+                width: `${cropRect.width * 100}%`,
+                height: `${cropRect.height * 100}%`,
+              }}
+            />
+
+            <button
+              type="button"
+              aria-label="Adjust top left crop corner"
+              onPointerDown={(event) => beginCropHandleDrag("top-left", event)}
+              className="absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              style={{ left: `${cropRect.x * 100}%`, top: `${cropRect.y * 100}%` }}
+            />
+            <button
+              type="button"
+              aria-label="Adjust top right crop corner"
+              onPointerDown={(event) => beginCropHandleDrag("top-right", event)}
+              className="absolute h-8 w-8 -translate-y-1/2 translate-x-1/2 rounded-md border-2 border-white bg-county-green/90"
+              style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${cropRect.y * 100}%` }}
+            />
+            <button
+              type="button"
+              aria-label="Adjust bottom left crop corner"
+              onPointerDown={(event) => beginCropHandleDrag("bottom-left", event)}
+              className="absolute h-8 w-8 -translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              style={{ left: `${cropRect.x * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
+            />
+            <button
+              type="button"
+              aria-label="Adjust bottom right crop corner"
+              onPointerDown={(event) => beginCropHandleDrag("bottom-right", event)}
+              className="absolute h-8 w-8 translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
+            />
+          </div>
+
+          <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent px-5 pt-6 text-center text-sm font-semibold tracking-wide text-white/95">
+            Drag the four corners to crop the subject
+          </div>
+
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/88 via-black/45 to-transparent px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10">
+            <div className="mx-auto flex max-w-md gap-3">
+              <button
+                type="button"
+                onClick={() => void openCamera()}
+                className="flex-1 rounded-full border border-white/50 px-4 py-3 text-sm font-semibold text-white"
+              >
+                Retake
+              </button>
+              <button
+                type="button"
+                onClick={() => void applyCroppedSelection()}
+                className="flex-1 rounded-full bg-county-green px-4 py-3 text-sm font-semibold text-white"
+              >
+                Use selection
               </button>
             </div>
           </div>
@@ -398,10 +618,34 @@ export function AIAssistantClient() {
 
         {(previewUrl || identified || identifyLoading || identifyError || cameraError) && (
           <div className="border-b border-county-panel bg-county-bg px-4 py-3 sm:px-6">
-            {previewUrl && <img src={previewUrl} alt="Species upload preview" className="h-24 w-24 rounded-lg object-cover" />}
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Species upload preview"
+                className={`h-24 w-24 rounded-lg object-cover ${identified && !mobileSpeciesExpanded ? "hidden sm:block" : ""}`}
+              />
+            )}
             {identifyLoading && <p className="mt-2 text-sm text-county-text">Analyzing photo with plant + animal models...</p>}
             {identified && (
-              <div className="mt-2 space-y-1 text-sm text-county-text">
+              <>
+                <button
+                  type="button"
+                  onClick={() => setMobileSpeciesExpanded((prev) => !prev)}
+                  className="mt-2 flex w-full items-center justify-between rounded-lg border border-county-panel bg-white px-3 py-2 text-left sm:hidden"
+                  aria-expanded={mobileSpeciesExpanded}
+                  aria-label="Toggle species details"
+                >
+                  <span className="min-w-0 truncate text-sm text-county-text">
+                    <span className="font-semibold text-county-blue">AI</span>
+                    <span className="px-1.5 text-county-text-secondary">•</span>
+                    <span className="font-semibold text-county-green">{identified.primary.commonName}</span>
+                    <span className="px-1.5 text-county-text-secondary">•</span>
+                    <span className="italic text-county-text-secondary">{identified.primary.scientificName}</span>
+                  </span>
+                  <span className="ml-3 text-xs font-semibold text-county-blue">{mobileSpeciesExpanded ? "Hide" : "Show"}</span>
+                </button>
+
+                <div className={`mt-2 space-y-1 text-sm text-county-text ${mobileSpeciesExpanded ? "block" : "hidden"} sm:block`}>
                 <p>
                   Best match: <span className="font-semibold text-county-green">{identified.primary.commonName}</span>{" "}
                   <span className="italic">({identified.primary.scientificName})</span>
@@ -412,7 +656,8 @@ export function AIAssistantClient() {
                 </p>
                 {identified.enrichment?.taxonomy?.length ? <p>Taxonomy: {identified.enrichment.taxonomy.join(" > ")}</p> : null}
                 {identified.providerNote ? <p className="text-county-text-secondary">{identified.providerNote}</p> : null}
-              </div>
+                </div>
+              </>
             )}
             {identifyError && <p className="mt-2 text-sm text-red-700">{identifyError}</p>}
             {cameraError && <p className="mt-2 text-sm text-red-700">{cameraError}</p>}
