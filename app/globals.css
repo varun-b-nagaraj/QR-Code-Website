@@ -33,3 +33,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+@media (max-width: 639px) {
+  body.ai-chat-page .ai-chat-footer {
+    display: none;
+  }
+}

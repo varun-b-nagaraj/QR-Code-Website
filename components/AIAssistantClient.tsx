@@ -81,6 +81,7 @@ export function AIAssistantClient() {
   const [cameraState, setCameraState] = useState<CameraState>("closed");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isComposerFocused, setIsComposerFocused] = useState(false);
+  const [composerInset, setComposerInset] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -90,6 +91,11 @@ export function AIAssistantClient() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.body.classList.add("ai-chat-page");
+
+    return () => {
+      document.body.classList.remove("ai-chat-page");
+    };
   }, []);
 
   useEffect(() => {
@@ -99,25 +105,34 @@ export function AIAssistantClient() {
   }, [messages, chatLoading, isPinnedToBottom]);
 
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 640px)").matches;
-    if (!isMobile || !isComposerFocused) return;
+    if (!isComposerFocused) {
+      setComposerInset(0);
+      return;
+    }
 
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    const previousBodyOverscroll = document.body.style.overscrollBehaviorY;
-    const previousHtmlOverscroll = document.documentElement.style.overscrollBehaviorY;
+    const media = window.matchMedia("(max-width: 640px)");
+    const viewport = window.visualViewport;
 
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overscrollBehaviorY = "none";
-    document.documentElement.style.overscrollBehaviorY = "none";
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    const updateComposerInset = () => {
+      if (!media.matches || !viewport) {
+        setComposerInset(0);
+        return;
+      }
+
+      const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      setComposerInset(keyboardOffset);
+    };
+
+    updateComposerInset();
+
+    if (!viewport) return;
+    viewport.addEventListener("resize", updateComposerInset);
+    viewport.addEventListener("scroll", updateComposerInset);
 
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      document.body.style.overscrollBehaviorY = previousBodyOverscroll;
-      document.documentElement.style.overscrollBehaviorY = previousHtmlOverscroll;
+      viewport.removeEventListener("resize", updateComposerInset);
+      viewport.removeEventListener("scroll", updateComposerInset);
+      setComposerInset(0);
     };
   }, [isComposerFocused]);
 
@@ -367,41 +382,6 @@ export function AIAssistantClient() {
       )}
 
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="pointer-events-none absolute right-4 top-3 z-20 sm:right-6">
-          <div className="pointer-events-auto">
-            <button
-              type="button"
-              onClick={() => setActionsOpen((prev) => !prev)}
-              className="rounded-full bg-county-green px-3 py-1 text-xl leading-none text-white shadow-sm"
-              aria-label="Add photo"
-            >
-              +
-            </button>
-
-            {actionsOpen && (
-              <div className="absolute right-0 top-12 z-20 w-56 rounded-xl border border-county-panel bg-white p-2 shadow-md">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActionsOpen(false);
-                    fileInputRef.current?.click();
-                  }}
-                  className="w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
-                >
-                  Add image from device
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void openCamera()}
-                  className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
-                >
-                  Open camera and scan
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
         <input
           ref={fileInputRef}
           type="file"
@@ -455,7 +435,11 @@ export function AIAssistantClient() {
           ))}
         </div>
 
-        <form onSubmit={(event) => void handleSend(event)} className="border-t border-county-panel bg-county-bg p-4 sm:p-6">
+        <form
+          onSubmit={(event) => void handleSend(event)}
+          className="sticky bottom-0 border-t border-county-panel bg-county-bg p-4 sm:p-6"
+          style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + ${composerInset}px)` }}
+        >
           <div className={`mb-3 flex-wrap gap-2 ${hasUserSentMessage ? "hidden sm:flex" : "flex"}`}>
             {quickPrompts.map((item) => (
               <button
@@ -472,7 +456,40 @@ export function AIAssistantClient() {
             ))}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex items-end gap-2">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setActionsOpen((prev) => !prev)}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-county-green text-xl leading-none text-white shadow-sm"
+                aria-label="Add photo"
+              >
+                +
+              </button>
+
+              {actionsOpen && (
+                <div className="absolute bottom-12 left-0 z-20 w-56 rounded-xl border border-county-panel bg-white p-2 shadow-md">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActionsOpen(false);
+                      fileInputRef.current?.click();
+                    }}
+                    className="w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+                  >
+                    Add image from device
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void openCamera()}
+                    className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-county-text hover:bg-county-bg"
+                  >
+                    Open camera and scan
+                  </button>
+                </div>
+              )}
+            </div>
+
             <input
               value={input}
               onChange={(event) => setInput(event.target.value)}
@@ -484,9 +501,21 @@ export function AIAssistantClient() {
             <button
               type="submit"
               disabled={chatLoading || !input.trim()}
-              className="rounded-full bg-county-blue px-5 py-3 text-sm font-semibold text-white hover:bg-county-green disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-county-blue text-white hover:bg-county-green disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label={chatLoading ? "Streaming response" : "Send message"}
             >
-              {chatLoading ? "Streaming..." : "Send"}
+              {chatLoading ? "…" : (
+                <svg viewBox="0 0 20 20" aria-hidden className="h-5 w-5">
+                  <path
+                    d="M10 15V5M10 5l-4 4M10 5l4 4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </button>
           </div>
 
