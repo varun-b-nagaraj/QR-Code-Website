@@ -582,7 +582,7 @@ export function AIAssistantClient() {
 
       {cameraState === "review" && capturedPhotoUrl && (
         <div className="absolute inset-0 z-40 touch-none overscroll-none bg-black">
-          <div ref={cropStageRef} className="relative h-full w-full touch-none overflow-hidden">
+          <div ref={cropStageRef} className="relative z-20 h-full w-full touch-none overflow-hidden">
             <img src={capturedPhotoUrl} alt="Captured preview" className="h-full w-full object-contain" />
 
             <div
@@ -599,38 +599,38 @@ export function AIAssistantClient() {
               type="button"
               aria-label="Adjust top left crop corner"
               onPointerDown={(event) => beginCropHandleDrag("top-left", event)}
-              className="absolute h-8 w-8 touch-none -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute z-30 h-8 w-8 touch-none -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${cropRect.x * 100}%`, top: `${cropRect.y * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust top right crop corner"
               onPointerDown={(event) => beginCropHandleDrag("top-right", event)}
-              className="absolute h-8 w-8 touch-none -translate-y-1/2 translate-x-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute z-30 h-8 w-8 touch-none -translate-y-1/2 translate-x-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${cropRect.y * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust bottom left crop corner"
               onPointerDown={(event) => beginCropHandleDrag("bottom-left", event)}
-              className="absolute h-8 w-8 touch-none -translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute z-30 h-8 w-8 touch-none -translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${cropRect.x * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
             />
             <button
               type="button"
               aria-label="Adjust bottom right crop corner"
               onPointerDown={(event) => beginCropHandleDrag("bottom-right", event)}
-              className="absolute h-8 w-8 touch-none translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
+              className="absolute z-30 h-8 w-8 touch-none translate-x-1/2 translate-y-1/2 rounded-md border-2 border-white bg-county-green/90"
               style={{ left: `${(cropRect.x + cropRect.width) * 100}%`, top: `${(cropRect.y + cropRect.height) * 100}%` }}
             />
           </div>
 
-          <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent px-5 pt-6 text-center text-sm font-semibold tracking-wide text-white/95">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/70 to-transparent px-5 pt-6 text-center text-sm font-semibold tracking-wide text-white/95">
             Drag the four corners to crop the subject
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/88 via-black/45 to-transparent px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10">
-            <div className="mx-auto flex max-w-md gap-3">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/88 via-black/45 to-transparent px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10">
+            <div className="pointer-events-auto mx-auto flex max-w-md gap-3">
               <button
                 type="button"
                 onClick={() => void openCamera()}
